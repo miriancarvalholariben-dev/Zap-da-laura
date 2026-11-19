@@ -2,8 +2,8 @@
 <html lang="pt-BR" class="light">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Zap da Laura • Escola Laura de Ávila</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Zap da Laura • Escola Laura de Auricélia</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -44,13 +44,13 @@
     /* Fundo padrão sutil estilo WhatsApp */
     .chat-wallpaper {
       background-color: #efeae2;
-      background-image: radial-gradient(#d1c7b7 0.85px, transparent 0.85px), radial-gradient(#d1c7b7 0.85px, #efeae2 0.85px);
+      background-image: radial-gradient(#d4cdc3 0.85px, transparent 0.85px), radial-gradient(#d4cdc3 0.85px, #efeae2 0.85px);
       background-size: 34px 34px;
       background-position: 0 0, 17px 17px;
     }
     .dark .chat-wallpaper {
       background-color: #0b141a;
-      background-image: radial-gradient(#1c272e 0.85px, transparent 0.85px), radial-gradient(#1c272e 0.85px, #0b141a 0.85px);
+      background-image: radial-gradient(#1b272f 0.85px, transparent 0.85px), radial-gradient(#1b272f 0.85px, #0b141a 0.85px);
       background-size: 34px 34px;
       background-position: 0 0, 17px 17px;
     }
@@ -58,17 +58,13 @@
     /* Scrollbar personalizada */
     ::-webkit-scrollbar {
       width: 6px;
-      height: 6px;
     }
     ::-webkit-scrollbar-track {
       background: transparent;
     }
     ::-webkit-scrollbar-thumb {
       background: rgba(134, 150, 160, 0.4);
-      border-radius: 9999px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: rgba(134, 150, 160, 0.7);
+      border-radius: 999px;
     }
 
     /* Cauda dos balões de mensagem */
@@ -105,291 +101,280 @@
       100% { transform: scale(1); opacity: 1; }
     }
     .animate-pop {
-      animation: popIn 0.18s ease-out forwards;
+      animation: popIn 0.16s ease-out forwards;
     }
   </style>
 </head>
-<body class="bg-[#d1d7db] dark:bg-[#090e11] text-[#111b21] dark:text-[#e9edef] font-sans antialiased h-screen w-screen overflow-hidden select-none sm:select-auto">
-
-  <!-- Toast / Notificação Flutuante -->
-  <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+<body class="bg-wa-bgLight dark:bg-wa-bgDark text-gray-800 dark:text-gray-100 h-screen w-screen overflow-hidden select-none sm:select-auto">
 
   <!-- TELA 1: LOGIN / BOAS-VINDAS ESCOLAR -->
-  <div id="login-screen" class="fixed inset-0 z-40 flex items-center justify-center p-4 bg-gradient-to-br from-wa-teal via-[#00a884] to-[#0b141a] overflow-y-auto">
-    <div class="w-full max-w-md bg-white dark:bg-wa-panelDark rounded-2xl shadow-2xl overflow-hidden animate-pop my-auto">
-      <!-- Cabeçalho do Card -->
-      <div class="bg-wa-teal dark:bg-wa-headerDark p-6 text-white text-center relative">
-        <div class="w-16 h-16 mx-auto bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center text-3xl shadow-inner mb-3">
-          💬🏫
+  <div id="login-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-wa-teal via-[#00a884] to-emerald-800 p-4">
+    <div class="bg-white dark:bg-wa-panelDark w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-pop">
+      <div class="bg-wa-teal p-6 text-white text-center relative">
+        <div class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-inner">
+          <span class="text-3xl">💬</span>
         </div>
         <h1 class="text-2xl font-bold tracking-tight">Zap da Laura</h1>
-        <p class="text-emerald-100 text-sm mt-1">Comunidade Oficial • Escola Laura de Ávila</p>
+        <p class="text-emerald-100 text-sm mt-1">Comunidade Oficial • Escola Laura de Auricélia</p>
       </div>
 
       <!-- Formulário de Acesso Rápido -->
       <form id="login-form" class="p-6 space-y-4">
         <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1.5">
+          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">
             Seu Nome ou Apelido
           </label>
-          <input 
-            type="text" 
-            id="input-name" 
-            required 
+          <input
+            type="text"
+            id="input-name"
+            required
             maxlength="28"
             placeholder="Ex: Lucas Silva, Prof. Ana..."
-            class="w-full px-4 py-3 rounded-xl bg-gray-100 dark:bg-wa-headerDark border border-transparent focus:border-wa-teal focus:bg-white dark:focus:bg-[#2a3942] outline-none transition text-sm font-medium"
+            class="w-full px-4 py-3 rounded-xl bg-gray-100 dark:bg-wa-headerDark border border-transparent focus:border-wa-teal focus:bg-white dark:focus:bg-wa-panelDark outline-none transition text-sm"
           />
         </div>
 
         <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1.5">
+          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">
             Turma / Série / Função
           </label>
-          <select 
-            id="input-grade" 
-            class="w-full px-4 py-3 rounded-xl bg-gray-100 dark:bg-wa-headerDark border border-transparent focus:border-wa-teal focus:bg-white dark:focus:bg-[#2a3942] outline-none transition text-sm font-medium"
+          <select
+            id="input-grade"
+            class="w-full px-4 py-3 rounded-xl bg-gray-100 dark:bg-wa-headerDark border border-transparent focus:border-wa-teal outline-none transition text-sm"
           >
-            <option value="6º Ano">🎒 6º Ano - Ensino Fundamental</option>
-            <option value="7º Ano">🎒 7º Ano - Ensino Fundamental</option>
-            <option value="8º Ano">📚 8º Ano - Ensino Fundamental</option>
-            <option value="9º Ano" selected>📚 9º Ano - Ensino Fundamental</option>
-            <option value="1º EM">🎓 1º Ano - Ensino Médio</option>
-            <option value="2º EM">🎓 2º Ano - Ensino Médio</option>
-            <option value="3º EM">🎓 3º Ano - Ensino Médio</option>
+            <option value="1º Ano">1º Ano - Ensino Fundamental</option>
+            <option value="2º Ano">2º Ano - Ensino Fundamental</option>
+            <option value="3º Ano" selected>3º Ano - Ensino Fundamental</option>
+            <option value="4º Ano">4º Ano - Ensino Fundamental</option>
+            <option value="5º Ano">5º Ano - Ensino Fundamental</option>
             <option value="Professor(a)">🍎 Professor(a)</option>
             <option value="Coordenação">🏫 Coordenação / Direção</option>
           </select>
         </div>
 
         <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1.5">
+          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">
             Escolha seu Avatar e Cor
           </label>
           <div class="flex items-center justify-between gap-2 bg-gray-50 dark:bg-wa-headerDark p-2.5 rounded-xl">
-            <div id="avatar-emoji-list" class="flex gap-1.5 flex-wrap">
+            <div id="avatar-emoji-list" class="flex gap-1.5">
               <!-- Emojis injetados via JS -->
             </div>
+            <div class="h-6 w-[1px] bg-gray-300 dark:bg-gray-600"></div>
             <div id="avatar-color-list" class="flex gap-1.5">
               <!-- Cores injetadas via JS -->
             </div>
           </div>
         </div>
 
-        <button 
-          type="submit" 
-          id="btn-enter"
-          class="w-full py-3.5 px-4 bg-wa-teal hover:bg-wa-tealDark active:scale-[0.99] text-white font-semibold rounded-xl shadow-lg shadow-emerald-600/20 transition flex items-center justify-center gap-2 text-base mt-2"
+        <button
+          type="submit"
+          class="w-full py-3.5 bg-wa-teal hover:bg-wa-tealDark active:scale-[0.99] text-white font-semibold rounded-xl shadow-lg shadow-emerald-600/20 transition flex items-center justify-center gap-2 mt-2"
         >
           <span>Entrar no Zap da Laura</span>
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
         </button>
 
         <p class="text-[11px] text-center text-gray-400 dark:text-gray-500 pt-1">
-          Conectado em tempo real • Compartilhe o link com sua turma!
+          Conexão em tempo real • Compartilhe o link com sua turma!
         </p>
       </form>
     </div>
   </div>
 
   <!-- TELA 2: APLICATIVO PRINCIPAL (ESTILO WHATSAPP WEB / MOBILE) -->
-  <div id="app-screen" class="hidden h-full w-full max-w-[1600px] mx-auto sm:p-3 md:p-4 flex">
-    <div class="w-full h-full bg-wa-panelLight dark:bg-wa-panelDark sm:rounded-2xl shadow-xl overflow-hidden flex border border-wa-borderLight dark:border-wa-borderDark relative">
+  <div id="app-screen" class="hidden h-full w-full max-w-[1600px] mx-auto flex bg-wa-panelLight dark:bg-wa-panelDark shadow-xl overflow-hidden">
 
-      <!-- COLUNA ESQUERDA: LISTA DE CONVERSAS E ALUNOS -->
-      <aside id="sidebar-panel" class="w-full md:w-[380px] lg:w-[410px] h-full flex flex-col border-r border-wa-borderLight dark:border-wa-borderDark bg-wa-panelLight dark:bg-wa-panelDark shrink-0 z-20">
-        
-        <!-- Header do Usuário -->
-        <header class="h-16 px-4 bg-wa-headerLight dark:bg-wa-headerDark flex items-center justify-between shrink-0 border-b border-wa-borderLight dark:border-wa-borderDark">
+    <!-- COLUNA ESQUERDA: LISTA DE CONVERSAS E ALUNOS -->
+    <aside id="sidebar-panel" class="w-full md:w-[360px] lg:w-[400px] flex flex-col border-r border-wa-borderLight dark:border-wa-borderDark bg-wa-panelLight dark:bg-wa-panelDark shrink-0">
+
+      <!-- Header do Usuário -->
+      <header class="h-16 px-4 bg-wa-headerLight dark:bg-wa-headerDark flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-3 min-w-0">
+          <div id="my-avatar" class="w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold text-white shadow-sm shrink-0">
+            🎓
+          </div>
+          <div class="min-w-0">
+            <h2 id="my-name-display" class="font-semibold text-sm truncate">Carregando...</h2>
+            <p id="my-grade-display" class="text-xs text-wa-teal dark:text-wa-accent font-medium truncate">Escola Laura de Auricélia</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-1 text-gray-600 dark:text-gray-300">
+          <!-- Botão Compartilhar Link do App -->
+          <button onclick="shareAppLink()" title="Convidar colegas da escola" class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+          </button>
+
+          <!-- Botão Criar Novo Grupo -->
+          <button onclick="openCreateGroupModal()" title="Criar novo grupo escolar" class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+          </button>
+
+          <!-- Botão Modo Escuro -->
+          <button onclick="toggleDarkMode()" title="Alternar tema claro/escuro" class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition">
+            <svg id="theme-icon-dark" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+            <svg id="theme-icon-light" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Barra de Pesquisa -->
+      <div class="p-2.5 border-b border-wa-borderLight dark:border-wa-borderDark">
+        <div class="relative flex items-center">
+          <svg class="w-4 h-4 text-gray-400 absolute left-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <input
+            type="text"
+            id="search-input"
+            oninput="renderSidebarLists()"
+            placeholder="Pesquisar conversa, turma ou aluno..."
+            class="w-full pl-10 pr-4 py-2 rounded-xl bg-wa-headerLight dark:bg-wa-headerDark text-sm outline-none placeholder-gray-500"
+          />
+        </div>
+      </div>
+
+      <!-- Abas: Conversas vs Alunos da Escola -->
+      <div class="flex border-b border-wa-borderLight dark:border-wa-borderDark text-xs font-semibold">
+        <button id="tab-chats" onclick="switchSidebarTab('chats')" class="flex-1 py-2.5 text-wa-teal dark:text-wa-accent border-b-2 border-wa-teal dark:border-wa-accent transition">
+          Conversas & Grupos
+        </button>
+        <button id="tab-users" onclick="switchSidebarTab('users')" class="flex-1 py-2.5 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition flex items-center justify-center gap-1.5">
+          <span>Galera da Escola</span>
+          <span id="online-count-badge" class="px-1.5 py-0.2 bg-wa-accent text-white rounded-full text-[10px]">0</span>
+        </button>
+      </div>
+
+      <!-- Lista Rolável (Chats ou Usuários) -->
+      <div id="sidebar-list" class="flex-1 overflow-y-auto divide-y divide-wa-borderLight/60 dark:divide-wa-borderDark/60">
+        <!-- Conteúdo preenchido em tempo real -->
+      </div>
+
+      <!-- Rodapé Institucional -->
+      <div class="p-2.5 bg-wa-headerLight/60 dark:bg-wa-headerDark/60 text-center border-t border-wa-borderLight dark:border-wa-borderDark">
+        <p class="text-[11px] text-gray-500 dark:text-gray-400">
+          🏫 <strong>Zap da Laura</strong> • Escola Laura de Auricélia
+        </p>
+      </div>
+    </aside>
+
+    <!-- COLUNA DIREITA: ÁREA DE CHAT ATIVO -->
+    <main id="chat-panel" class="hidden md:flex flex-1 flex-col bg-wa-bgLight dark:bg-wa-bgDark relative">
+
+      <!-- Estado Vazio (Quando nenhuma conversa está selecionada no desktop) -->
+      <div id="empty-chat-state" class="hidden flex-1 flex flex-col items-center justify-center p-8 text-center">
+        <div class="w-24 h-24 rounded-full bg-wa-teal/10 dark:bg-wa-accent/10 flex items-center justify-center text-5xl mb-4">
+          🏫
+        </div>
+        <h2 class="text-2xl font-light text-gray-700 dark:text-gray-200">Zap da Laura Web</h2>
+        <p class="text-sm text-gray-500 dark:text-gray-400 max-w-md mt-2">
+          Conecte-se com colegas, professores e grupos da <strong>Escola Laura de Auricélia</strong> em tempo real. Escolha uma conversa ao lado para começar!
+        </p>
+        <button onclick="shareAppLink()" class="mt-6 px-5 py-2.5 bg-wa-teal hover:bg-wa-tealDark text-white text-sm font-medium rounded-full shadow transition">
+          Copiar Link para Convidar Colegas
+        </button>
+      </div>
+
+      <!-- Interface da Conversa Ativa -->
+      <div id="active-chat-container" class="hidden flex-1 flex flex-col h-full">
+
+        <!-- Cabeçalho do Chat Ativo -->
+        <header class="h-16 px-3 sm:px-4 bg-wa-headerLight dark:bg-wa-headerDark border-b border-wa-borderLight dark:border-wa-borderDark flex items-center justify-between shrink-0 z-10">
           <div class="flex items-center gap-3 min-w-0">
-            <div id="my-avatar" class="w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold text-white shadow-sm shrink-0 cursor-pointer" title="Seu Perfil">
-              😎
+            <!-- Botão Voltar (Mobile) -->
+            <button onclick="closeMobileChat()" class="md:hidden p-1.5 -ml-1 rounded-full hover:bg-black/5 dark:hover:bg-white/10">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+            </button>
+
+            <div id="active-chat-avatar" class="w-10 h-10 rounded-full bg-wa-teal text-white flex items-center justify-center text-lg font-bold shrink-0">
+              🏫
             </div>
             <div class="min-w-0">
-              <div class="flex items-center gap-1.5">
-                <h2 id="my-name" class="font-semibold text-sm truncate">Carregando...</h2>
-                <span class="w-2 h-2 rounded-full bg-wa-accent shrink-0" title="Online agora"></span>
-              </div>
-              <p id="my-grade" class="text-xs text-gray-500 dark:text-gray-400 truncate">Escola Laura de Ávila</p>
+              <h3 id="active-chat-title" class="font-semibold text-sm sm:text-base truncate">Mural Geral • Laura de Auricélia</h3>
+              <p id="active-chat-subtitle" class="text-xs text-gray-500 dark:text-gray-400 truncate">Chat oficial de todos os alunos e professores da escola</p>
             </div>
           </div>
 
-          <!-- Ações Rápidas do Topo -->
+          <!-- Botão de Aviso Rápido Escolar -->
           <div class="flex items-center gap-1">
-            <button onclick="copyInviteLink()" class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 text-wa-teal dark:text-wa-accent transition flex items-center gap-1 text-xs font-semibold px-2.5 bg-emerald-500/10" title="Copiar link para convidar colegas">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
-              <span class="hidden sm:inline">Convidar</span>
-            </button>
-
-            <button onclick="openNewGroupModal()" class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 text-gray-600 dark:text-gray-300 transition" title="Criar Novo Grupo Escolar">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-            </button>
-
-            <button onclick="toggleDarkMode()" class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 text-gray-600 dark:text-gray-300 transition" title="Alternar Tema Claro/Escuro">
-              <svg id="theme-icon-dark" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-              <svg id="theme-icon-light" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+            <button onclick="toggleQuickTemplates()" title="Mensagens rápidas da escola" class="px-3 py-1.5 rounded-full bg-wa-teal/10 dark:bg-wa-accent/15 text-wa-teal dark:text-wa-accent text-xs font-semibold hover:bg-wa-teal/20 transition flex items-center gap-1">
+              <span>⚡</span>
+              <span class="hidden sm:inline">Avisos Rápidos</span>
             </button>
           </div>
         </header>
 
-        <!-- Barra de Pesquisa -->
-        <div class="p-2.5 bg-wa-panelLight dark:bg-wa-panelDark border-b border-wa-borderLight dark:border-wa-borderDark">
-          <div class="relative flex items-center">
-            <svg class="w-4 h-4 text-gray-400 absolute left-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-            <input 
-              type="text" 
-              id="search-input"
-              placeholder="Pesquisar conversa, turma ou aluno..."
-              class="w-full pl-10 pr-4 py-2 rounded-xl bg-wa-headerLight dark:bg-wa-headerDark text-sm outline-none placeholder-gray-500 focus:ring-1 focus:ring-wa-teal"
-            />
-          </div>
-
-          <!-- Abas: Conversas vs Alunos da Escola -->
-          <div class="flex gap-1.5 mt-2.5">
-            <button id="tab-chats" onclick="switchSidebarTab('chats')" class="flex-1 py-1.5 px-3 rounded-full text-xs font-semibold bg-emerald-100 text-wa-teal dark:bg-wa-tealDark dark:text-emerald-100 transition">
-              💬 Conversas & Grupos
-            </button>
-            <button id="tab-users" onclick="switchSidebarTab('users')" class="flex-1 py-1.5 px-3 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 dark:bg-wa-headerDark dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-wa-hoverDark transition flex items-center justify-center gap-1.5">
-              <span>👥 Alunos</span>
-              <span id="online-count-badge" class="px-1.5 py-0.2 bg-wa-accent text-white rounded-full text-[10px] font-bold">0</span>
-            </button>
-          </div>
+        <!-- Área de Mensagens -->
+        <div id="messages-container" class="flex-1 overflow-y-auto p-3 sm:p-6 space-y-2.5 chat-wallpaper">
+          <!-- Mensagens renderizadas em tempo real -->
         </div>
 
-        <!-- Lista Dinâmica (Conversas ou Usuários) -->
-        <div id="sidebar-list" class="flex-1 overflow-y-auto divide-y divide-wa-borderLight/60 dark:divide-wa-borderDark/60">
-          <!-- Conteúdo preenchido em tempo real -->
-        </div>
-
-        <!-- Rodapé Institucional -->
-        <div class="p-2.5 text-center text-[11px] text-gray-400 dark:text-gray-500 border-t border-wa-borderLight dark:border-wa-borderDark bg-wa-headerLight/50 dark:bg-wa-headerDark/50">
-          🏫 <strong>Zap da Laura</strong> • Escola Laura de Ávila
-        </div>
-      </aside>
-
-      <!-- COLUNA DIREITA: ÁREA DE CHAT ATIVO -->
-      <main id="chat-panel" class="hidden md:flex flex-1 flex-col h-full bg-wa-bgLight dark:bg-wa-bgDark relative">
-        
-        <!-- Estado Vazio (Quando nenhuma conversa está selecionada no desktop) -->
-        <div id="empty-chat-state" class="flex-1 flex flex-col items-center justify-center p-8 text-center bg-[#f0f2f5] dark:bg-[#222e35] border-b-[6px] border-wa-teal">
-          <div class="w-24 h-24 rounded-3xl bg-wa-teal/10 dark:bg-wa-teal/20 flex items-center justify-center text-5xl mb-5 shadow-sm">
-            🏫💬
+        <!-- Barra de Resposta (Reply Preview) -->
+        <div id="reply-preview-bar" class="hidden px-4 py-2 bg-wa-headerLight dark:bg-wa-headerDark border-t border-wa-borderLight dark:border-wa-borderDark flex items-center justify-between">
+          <div class="border-l-4 border-wa-teal pl-3 py-0.5 min-w-0">
+            <p id="reply-to-name" class="text-xs font-bold text-wa-teal dark:text-wa-accent truncate">Nome</p>
+            <p id="reply-to-text" class="text-xs text-gray-600 dark:text-gray-300 truncate">Mensagem original...</p>
           </div>
-          <h2 class="text-2xl font-light text-gray-700 dark:text-gray-200">Zap da Laura Web</h2>
-          <p class="text-sm text-gray-500 dark:text-gray-400 max-w-md mt-2 leading-relaxed">
-            Conecte-se com colegas, professores e turmas da <strong>Escola Laura de Ávila</strong> em tempo real. Escolha um grupo ou clique em um aluno na aba <strong>Alunos</strong> para iniciar uma conversa privada!
-          </p>
-          <button onclick="copyInviteLink()" class="mt-6 px-5 py-2.5 rounded-full bg-wa-teal hover:bg-wa-tealDark text-white text-sm font-medium shadow transition flex items-center gap-2">
-            <span>🔗 Copiar Link para Convidar Colegas</span>
+          <button onclick="cancelReply()" class="p-1.5 text-gray-500 hover:text-gray-700">
+            ✕
           </button>
         </div>
 
-        <!-- Interface de Conversa Ativa -->
-        <div id="active-chat-container" class="hidden flex-1 flex flex-col h-full overflow-hidden">
-          
-          <!-- Cabeçalho do Chat Ativo -->
-          <header class="h-16 px-3 sm:px-4 bg-wa-headerLight dark:bg-wa-headerDark flex items-center justify-between shrink-0 border-b border-wa-borderLight dark:border-wa-borderDark z-10">
-            <div class="flex items-center gap-2.5 min-w-0">
-              <!-- Botão Voltar (Mobile) -->
-              <button onclick="closeMobileChat()" class="md:hidden p-2 -ml-1 rounded-full hover:bg-black/5 dark:hover:bg-white/10 text-gray-600 dark:text-gray-300">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-              </button>
+        <!-- Seletor Rápido de Emojis -->
+        <div id="emoji-picker" class="hidden px-4 py-2.5 bg-wa-panelLight dark:bg-wa-panelDark border-t border-wa-borderLight dark:border-wa-borderDark flex flex-wrap gap-2">
+          <!-- Emojis injetados via JS -->
+        </div>
 
-              <div id="active-chat-avatar" class="w-10 h-10 rounded-full bg-wa-teal text-white flex items-center justify-center text-lg font-bold shrink-0 shadow-sm">
-                🏫
-              </div>
+        <!-- Barra Inferior de Digitação -->
+        <footer class="p-2.5 sm:px-4 bg-wa-headerLight dark:bg-wa-headerDark flex items-end gap-2 shrink-0">
+          <button type="button" onclick="toggleEmojiPicker()" class="p-2.5 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition shrink-0">
+            <span class="text-xl leading-none">😊</span>
+          </button>
 
-              <div class="min-w-0">
-                <h3 id="active-chat-title" class="font-semibold text-sm sm:text-base truncate">Mural Geral - Laura de Ávila</h3>
-                <p id="active-chat-subtitle" class="text-xs text-wa-teal dark:text-wa-accent truncate">Todos os alunos e professores</p>
-              </div>
-            </div>
+          <form id="message-form" class="flex-1 flex items-end gap-2">
+            <textarea
+              id="message-input"
+              rows="1"
+              placeholder="Digite uma mensagem para a galera..."
+              class="flex-1 max-h-32 px-4 py-2.5 rounded-2xl bg-white dark:bg-wa-bubbleInDark text-sm outline-none resize-none shadow-sm placeholder-gray-400"
+            ></textarea>
 
-            <!-- Botão de Aviso Rápido Escolar -->
-            <div class="flex items-center gap-1.5">
-              <button onclick="openQuickNoticeModal()" class="px-3 py-1.5 rounded-full bg-amber-500/15 text-amber-700 dark:text-amber-300 hover:bg-amber-500/25 text-xs font-semibold transition flex items-center gap-1" title="Enviar aviso escolar formatado">
-                <span>📢</span>
-                <span class="hidden sm:inline">Aviso Rápido</span>
-              </button>
-            </div>
-          </header>
-
-          <!-- Área de Mensagens -->
-          <div id="messages-container" class="flex-1 overflow-y-auto p-3 sm:p-5 space-y-2.5 chat-wallpaper relative">
-            <!-- Mensagens renderizadas em tempo real -->
-          </div>
-
-          <!-- Barra de Resposta (Reply Preview) -->
-          <div id="reply-preview-bar" class="hidden px-4 py-2 bg-wa-headerLight dark:bg-wa-headerDark border-t border-wa-borderLight dark:border-wa-borderDark flex items-center justify-between animate-pop">
-            <div class="border-l-4 border-wa-teal pl-3 py-0.5 min-w-0">
-              <p id="reply-to-sender" class="text-xs font-bold text-wa-teal dark:text-wa-accent truncate">Respondendo a...</p>
-              <p id="reply-to-text" class="text-xs text-gray-600 dark:text-gray-300 truncate">Texto original</p>
-            </div>
-            <button onclick="cancelReply()" class="p-1.5 rounded-full hover:bg-black/10 dark:hover:bg-white/10 text-gray-500">
-              ✕
-            </button>
-          </div>
-
-          <!-- Seletor Rápido de Emojis -->
-          <div id="emoji-picker" class="hidden px-4 py-2.5 bg-wa-panelLight dark:bg-wa-headerDark border-t border-wa-borderLight dark:border-wa-borderDark flex flex-wrap gap-2">
-            <!-- Emojis injetados via JS -->
-          </div>
-
-          <!-- Barra Inferior de Digitação -->
-          <footer class="p-2.5 sm:px-4 bg-wa-headerLight dark:bg-wa-headerDark flex items-end gap-2 shrink-0 border-t border-wa-borderLight dark:border-wa-borderDark">
-            <button type="button" onclick="toggleEmojiPicker()" class="p-2.5 rounded-full hover:bg-black/5 dark:hover:bg-white/10 text-gray-500 dark:text-gray-300 transition shrink-0" title="Emojis">
-              😊
-            </button>
-
-            <div class="flex-1 bg-white dark:bg-[#2a3942] rounded-2xl px-4 py-2.5 shadow-sm flex items-center">
-              <input 
-                type="text" 
-                id="message-input" 
-                placeholder="Digite uma mensagem para a galera..." 
-                autocomplete="off"
-                class="w-full bg-transparent outline-none text-sm text-gray-800 dark:text-gray-100 placeholder-gray-400"
-              />
-            </div>
-
-            <button 
-              type="button" 
-              id="btn-send-message"
-              onclick="sendMessage()"
+            <button
+              type="submit"
+              id="send-btn"
               class="p-3 rounded-full bg-wa-teal hover:bg-wa-tealDark active:scale-95 text-white shadow-md transition shrink-0 flex items-center justify-center"
-              title="Enviar mensagem"
             >
               <svg class="w-5 h-5 translate-x-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
             </button>
-          </footer>
-        </div>
-      </main>
-    </div>
+          </form>
+        </footer>
+      </div>
+    </main>
   </div>
 
   <!-- MODAL: CRIAR NOVO GRUPO -->
-  <div id="new-group-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+  <div id="create-group-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
     <div class="bg-white dark:bg-wa-panelDark w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-pop">
-      <div class="bg-wa-teal p-4 text-white flex items-center justify-between">
+      <div class="bg-wa-teal px-5 py-4 text-white flex items-center justify-between">
         <h3 class="font-bold text-base">Criar Novo Grupo Escolar</h3>
-        <button onclick="closeNewGroupModal()" class="text-white/80 hover:text-white text-lg">✕</button>
+        <button onclick="closeCreateGroupModal()" class="text-white/80 hover:text-white text-lg">✕</button>
       </div>
-      <form id="new-group-form" class="p-5 space-y-4">
+      <form id="create-group-form" class="p-5 space-y-4">
         <div>
-          <label class="block text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 mb-1">Nome do Grupo</label>
-          <input type="text" id="group-name-input" required maxlength="35" placeholder="Ex: Trabalho de Ciências - 9º Ano" class="w-full px-3.5 py-2.5 rounded-xl bg-gray-100 dark:bg-wa-headerDark outline-none focus:ring-2 focus:ring-wa-teal text-sm" />
+          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Nome do Grupo</label>
+          <input type="text" id="group-name-input" required maxlength="35" placeholder="Ex: Trabalho de Ciências, Interclasse..." class="w-full px-3.5 py-2.5 rounded-xl bg-gray-100 dark:bg-wa-headerDark text-sm outline-none focus:ring-2 focus:ring-wa-teal" />
         </div>
         <div>
-          <label class="block text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 mb-1">Descrição / Assunto</label>
-          <input type="text" id="group-desc-input" maxlength="60" placeholder="Ex: Grupo para combinar a apresentação de sexta" class="w-full px-3.5 py-2.5 rounded-xl bg-gray-100 dark:bg-wa-headerDark outline-none focus:ring-2 focus:ring-wa-teal text-sm" />
+          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Descrição / Assunto</label>
+          <input type="text" id="group-desc-input" maxlength="60" placeholder="Para combinar a apresentação de sexta" class="w-full px-3.5 py-2.5 rounded-xl bg-gray-100 dark:bg-wa-headerDark text-sm outline-none focus:ring-2 focus:ring-wa-teal" />
         </div>
         <div>
-          <label class="block text-xs font-semibold uppercase text-gray-500 dark:text-gray-400 mb-1">Ícone do Grupo</label>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Ícone do Grupo</label>
           <div id="group-icon-options" class="flex gap-2 flex-wrap">
             <!-- Ícones via JS -->
           </div>
         </div>
         <div class="flex justify-end gap-2 pt-2">
-          <button type="button" onclick="closeNewGroupModal()" class="px-4 py-2 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-wa-headerDark">Cancelar</button>
+          <button type="button" onclick="closeCreateGroupModal()" class="px-4 py-2 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10">Cancelar</button>
           <button type="submit" class="px-5 py-2 rounded-xl text-sm font-semibold bg-wa-teal hover:bg-wa-tealDark text-white shadow">Criar Grupo</button>
         </div>
       </form>
@@ -397,461 +382,414 @@
   </div>
 
   <!-- MODAL: AVISO RÁPIDO ESCOLAR -->
-  <div id="quick-notice-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+  <div id="quick-templates-modal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
     <div class="bg-white dark:bg-wa-panelDark w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-pop">
-      <div class="bg-amber-600 p-4 text-white flex items-center justify-between">
-        <h3 class="font-bold text-base">📢 Enviar Aviso Escolar Rápido</h3>
-        <button onclick="closeQuickNoticeModal()" class="text-white/80 hover:text-white text-lg">✕</button>
+      <div class="bg-wa-teal px-5 py-3.5 text-white flex items-center justify-between">
+        <h3 class="font-bold text-sm">⚡ Mensagens Rápidas • Escola Laura de Auricélia</h3>
+        <button onclick="toggleQuickTemplates()" class="text-white/80 hover:text-white">✕</button>
       </div>
-      <div class="p-5 space-y-3">
-        <p class="text-xs text-gray-500 dark:text-gray-400">Escolha um modelo pronto ou personalize um recado importante para este chat:</p>
-        <div class="space-y-2">
-          <button onclick="sendPredefinedNotice('📚 Lembrete de Tarefa: Não esqueçam de entregar a atividade na próxima aula!')" class="w-full text-left p-3 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/20 text-xs font-medium transition">
-            📚 <strong>Lembrete de Tarefa:</strong> Não esqueçam de entregar a atividade na próxima aula!
-          </button>
-          <button onclick="sendPredefinedNotice('📝 Atenção Prova: Pessoal, vamos revisar o conteúdo hoje mais tarde!')" class="w-full text-left p-3 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/20 text-xs font-medium transition">
-            📝 <strong>Atenção Prova:</strong> Pessoal, vamos revisar o conteúdo hoje mais tarde!
-          </button>
-          <button onclick="sendPredefinedNotice('⚽ Intervalo / Educação Física: Quem vai jogar hoje na quadra?')" class="w-full text-left p-3 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 text-xs font-medium transition">
-            ⚽ <strong>Intervalo / Quadra:</strong> Quem vai jogar hoje na quadra?
-          </button>
-        </div>
+      <div class="p-4 space-y-2">
+        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Escolha um modelo pronto ou um recado importante:</p>
+        <button onclick="insertTemplate('📚 Lembrete de Tarefa: Não esqueçam de entregar a atividade na próxima aula!')" class="w-full text-left p-3 rounded-xl bg-gray-50 dark:bg-wa-headerDark hover:bg-emerald-50 dark:hover:bg-wa-hoverDark text-xs transition border border-gray-200 dark:border-gray-700">
+          📚 <strong>Lembrete de Tarefa:</strong> Não esqueçam de entregar a atividade na próxima aula!
+        </button>
+        <button onclick="insertTemplate('📢 Atenção Prova: Pessoal, vamos revisar o conteúdo hoje mais tarde?')" class="w-full text-left p-3 rounded-xl bg-gray-50 dark:bg-wa-headerDark hover:bg-emerald-50 dark:hover:bg-wa-hoverDark text-xs transition border border-gray-200 dark:border-gray-700">
+          📢 <strong>Atenção Prova:</strong> Pessoal, vamos revisar o conteúdo hoje mais tarde?
+        </button>
+        <button onclick="insertTemplate('⚽ Interclasse / Educação Física: Quem vai jogar hoje na quadra?')" class="w-full text-left p-3 rounded-xl bg-gray-50 dark:bg-wa-headerDark hover:bg-emerald-50 dark:hover:bg-wa-hoverDark text-xs transition border border-gray-200 dark:border-gray-700">
+          ⚽ <strong>Interclasse / Educação Física:</strong> Quem vai jogar hoje na quadra?
+        </button>
       </div>
     </div>
   </div>
 
-  <!-- FIREBASE & LÓGICA EM TEMPO REAL -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc, addDoc, updateDoc, collection, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+  <!-- TOAST DE NOTIFICAÇÃO -->
+  <div id="toast" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-full bg-gray-900/90 text-white text-xs font-medium shadow-lg opacity-0 pointer-events-none transition-opacity duration-300">
+    Link copiado!
+  </div>
 
-    // Configuração do Ambiente
+  <!-- SUPABASE & LÓGICA EM TEMPO REAL -->
+  <script type="module">
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 
-const supabaseUrl = 'https://wxrvgocaqtatrjtyittz.supabase.co';
-const supabaseKey = 'sb_publishable_gLPYsCSpMwdz4LjxCidalg_QRcUbBK-';
-const supabase = createClient(supabaseUrl, supabaseKey);
-
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    // Caminhos estritos obrigatórios no Firestore (/artifacts/{appId}/public/data/{collection})
-    const getPublicCollection = (colName) => collection(db, 'artifacts', appId, 'public', 'data', colName);
-    const getPublicDoc = (colName, docId) => doc(db, 'artifacts', appId, 'public', 'data', colName, docId);
+    // Configuração do Supabase (Zap da Laura)
+    const supabaseUrl = 'https://wxrvgocaqtatrjtyittz.supabase.co';
+    const supabaseKey = 'sb_publishable_gLPYsCSpMwdz4LjxCidalg_QRcUbBK-';
+    const supabase = createClient(supabaseUrl, supabaseKey);
 
     // Estado Global da Aplicação
     let currentUser = null;
     let currentUserProfile = null;
-    let allUsers = [];
-    let allChats = [];
-    let activeChatId = null;
-    let activeChatMessages = [];
-    let unsubscribeMessages = null;
-    let sidebarTab = 'chats';
-    let replyingTo = null;
-    let unreadCounts = {};
+    let currentChat = null; // { id, type: 'group' | 'dm', title, subtitle, avatar, color }
+    let activeSidebarTab = 'chats';
+    let replyToMessage = null;
+    let selectedEmoji = '🎓';
+    let selectedColor = '#008069';
+    let selectedGroupIcon = '📚';
+    let onlineUsers = [];
+    let groupsList = [];
+    let currentMessages = [];
+    let messageSubscription = null;
 
     // Opções Visuais de Avatar
-    const EMOJIS = ['😎', '🤓', '🦊', '🐼', '🦁', '🚀', '🎨', '⚽', '🎧', '📚'];
-    const COLORS = ['#008069', '#2563eb', '#9333ea', '#e11d48', '#d97706', '#059669'];
-    const QUICK_EMOJIS = ['😂', '❤️', '👍', '🔥', '👏', '😭', '🎉', '🤔', '📚', '🏫', '✅', '🙏', '😎', '💯'];
-    const GROUP_ICONS = ['📚', '🏫', '⚽', '🎨', '🔬', '💻', '🎵', '🎓'];
+    const EMOJIS = ['🎓', '😎', '🤓', '🦁', '🦊', '🚀', '⚽', '🎨', '📚', '🎧', '🌟', '🐱'];
+    const COLORS = ['#008069', '#0284c7', '#7c3aed', '#db2777', '#ea580c', '#16a34a', '#4f46e5', '#be123c'];
+    const GROUP_ICONS = ['📚', '⚽', '🎨', '🔬', '🎭', '🚌', '📢', '🎉'];
 
-    let selectedAvatarEmoji = EMOJIS[0];
-    let selectedAvatarColor = COLORS[0];
-    let selectedGroupIcon = GROUP_ICONS[0];
+    // Inicializar ID Local do Usuário
+    function getOrCreateUserId() {
+      let uid = localStorage.getItem('zap_laura_uid');
+      if (!uid) {
+        uid = 'user_' + Math.random().toString(36).substring(2, 11) + Date.now().toString(36);
+        localStorage.setItem('zap_laura_uid', uid);
+      }
+      return uid;
+    }
 
-    // Inicializar UI de Login
     function initLoginUI() {
       const emojiContainer = document.getElementById('avatar-emoji-list');
-      EMOJIS.forEach((emoji, idx) => {
+      const colorContainer = document.getElementById('avatar-color-list');
+      const groupIconContainer = document.getElementById('group-icon-options');
+
+      EMOJIS.slice(0, 6).forEach(emoji => {
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.textContent = emoji;
-        btn.className = `w-8 h-8 rounded-lg flex items-center justify-center text-lg transition ${idx === 0 ? 'bg-wa-teal/20 ring-2 ring-wa-teal' : 'hover:bg-gray-200 dark:hover:bg-gray-700'}`;
+        btn.className = `w-8 h-8 rounded-lg flex items-center justify-center text-base transition ${emoji === selectedEmoji ? 'bg-wa-teal/20 ring-2 ring-wa-teal scale-110' : 'hover:bg-gray-200 dark:hover:bg-gray-700'}`;
         btn.onclick = () => {
-          selectedAvatarEmoji = emoji;
-          Array.from(emojiContainer.children).forEach(c => c.className = 'w-8 h-8 rounded-lg flex items-center justify-center text-lg transition hover:bg-gray-200 dark:hover:bg-gray-700');
-          btn.className = 'w-8 h-8 rounded-lg flex items-center justify-center text-lg transition bg-wa-teal/20 ring-2 ring-wa-teal';
+          selectedEmoji = emoji;
+          Array.from(emojiContainer.children).forEach(c => c.className = 'w-8 h-8 rounded-lg flex items-center justify-center text-base transition hover:bg-gray-200 dark:hover:bg-gray-700');
+          btn.className = 'w-8 h-8 rounded-lg flex items-center justify-center text-base transition bg-wa-teal/20 ring-2 ring-wa-teal scale-110';
         };
         emojiContainer.appendChild(btn);
       });
 
-      const colorContainer = document.getElementById('avatar-color-list');
-      COLORS.forEach((color, idx) => {
+      COLORS.slice(0, 5).forEach(color => {
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.style.backgroundColor = color;
-        btn.className = `w-6 h-6 rounded-full transition ${idx === 0 ? 'ring-2 ring-offset-2 ring-gray-800 dark:ring-white scale-110' : 'opacity-80 hover:opacity-100'}`;
+        btn.className = `w-6 h-6 rounded-full transition ${color === selectedColor ? 'ring-2 ring-offset-2 ring-gray-800 dark:ring-white scale-110' : 'opacity-80 hover:opacity-100'}`;
         btn.onclick = () => {
-          selectedAvatarColor = color;
+          selectedColor = color;
           Array.from(colorContainer.children).forEach(c => c.className = 'w-6 h-6 rounded-full transition opacity-80 hover:opacity-100');
           btn.className = 'w-6 h-6 rounded-full transition ring-2 ring-offset-2 ring-gray-800 dark:ring-white scale-110';
         };
         colorContainer.appendChild(btn);
       });
 
-      // Inicializar Emojis do Chat
-      const picker = document.getElementById('emoji-picker');
-      QUICK_EMOJIS.forEach(emoji => {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.textContent = emoji;
-        btn.className = 'text-xl hover:scale-125 transition p-1';
-        btn.onclick = () => {
-          const input = document.getElementById('message-input');
-          input.value += emoji;
-          input.focus();
-        };
-        picker.appendChild(btn);
-      });
-
-      // Inicializar Ícones de Grupo
-      const gIcons = document.getElementById('group-icon-options');
-      GROUP_ICONS.forEach((icon, idx) => {
+      GROUP_ICONS.forEach(icon => {
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.textContent = icon;
-        btn.className = `w-9 h-9 rounded-xl flex items-center justify-center text-lg border ${idx === 0 ? 'border-wa-teal bg-wa-teal/10' : 'border-gray-200 dark:border-gray-700'}`;
+        btn.className = `w-9 h-9 rounded-xl flex items-center justify-center text-lg border transition ${icon === selectedGroupIcon ? 'border-wa-teal bg-wa-teal/10' : 'border-gray-200 dark:border-gray-700'}`;
         btn.onclick = () => {
           selectedGroupIcon = icon;
-          Array.from(gIcons.children).forEach(c => c.className = 'w-9 h-9 rounded-xl flex items-center justify-center text-lg border border-gray-200 dark:border-gray-700');
-          btn.className = 'w-9 h-9 rounded-xl flex items-center justify-center text-lg border border-wa-teal bg-wa-teal/10';
+          Array.from(groupIconContainer.children).forEach(c => c.className = 'w-9 h-9 rounded-xl flex items-center justify-center text-lg border transition border-gray-200 dark:border-gray-700');
+          btn.className = 'w-9 h-9 rounded-xl flex items-center justify-center text-lg border transition border-wa-teal bg-wa-teal/10';
         };
-        gIcons.appendChild(btn);
+        groupIconContainer.appendChild(btn);
       });
-    }
 
-    // Autenticação Inicial (Obrigatório antes de qualquer operação Firestore)
-    async function initAuth() {
-      try {
-        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-          await signInWithCustomToken(auth, __initial_auth_token);
-        } else {
-          await signInAnonymously(auth);
-        }
-      } catch (err) {
-        console.error("Erro na autenticação:", err);
-        showToast("Erro ao conectar ao servidor escolar. Tente recarregar.", "error");
+      // Popular seletor de emojis do chat
+      const chatEmojiPicker = document.getElementById('emoji-picker');
+      ['😀', '😂', '🥰', '😎', '🤔', '👏', '🙌', '🔥', '❤️', '👍', '📚', '✏️', '🎓', '🏫', '⚽', '🎉', '🙏', '💯'].forEach(em => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.textContent = em;
+        b.className = 'text-xl hover:scale-125 transition p-1';
+        b.onclick = () => {
+          const inp = document.getElementById('message-input');
+          inp.value += em;
+          inp.focus();
+        };
+        chatEmojiPicker.appendChild(b);
+      });
+
+      // Preencher dados salvos localmente se existirem
+      const savedProfile = localStorage.getItem('zap_laura_profile');
+      if (savedProfile) {
+        try {
+          const p = JSON.parse(savedProfile);
+          document.getElementById('input-name').value = p.name || '';
+          if (p.grade) document.getElementById('input-grade').value = p.grade;
+        } catch (e) {}
       }
     }
 
-    onAuthStateChanged(auth, async (user) => {
-      if (!user) return;
-      currentUser = user;
-
-      // Verificar se o usuário já tem perfil salvo no Firestore
-      try {
-        const userSnap = await getDoc(getPublicDoc('users', user.uid));
-        if (userSnap.exists()) {
-          currentUserProfile = userSnap.data();
-          await updateDoc(getPublicDoc('users', user.uid), {
-            online: true,
-            lastSeen: Date.now()
-          });
-          enterApp();
-        }
-      } catch (e) {
-        console.error("Erro ao verificar perfil:", e);
-      }
-    });
-
-    // Submissão do Formulário de Login
-    document.getElementById('login-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      if (!currentUser) {
-        await initAuth();
-      }
-      if (!currentUser) return;
-
-      const name = document.getElementById('input-name').value.trim();
-      const grade = document.getElementById('input-grade').value;
-      if (!name) return;
-
-      const btn = document.getElementById('btn-enter');
-      btn.disabled = true;
-      btn.innerHTML = `<span>Conectando à escola...</span>`;
-
-      currentUserProfile = {
-        uid: currentUser.uid,
-        name,
-        grade,
-        avatarEmoji: selectedAvatarEmoji,
-        avatarColor: selectedAvatarColor,
-        online: true,
-        lastSeen: Date.now()
-      };
-
-      try {
-        await setDoc(getPublicDoc('users', currentUser.uid), currentUserProfile);
-        await ensureGeneralSchoolGroup();
-        enterApp();
-      } catch (err) {
-        console.error("Erro ao salvar perfil:", err);
-        showToast("Não foi possível entrar. Verifique sua conexão.", "error");
-        btn.disabled = false;
-        btn.innerHTML = `<span>Entrar no Zap da Laura</span>`;
-      }
-    });
-
-    // Garantir que o Grupo Geral da Escola exista
-    async function ensureGeneralSchoolGroup() {
-      const generalRef = getPublicDoc('chats', 'mural-geral-laura-de-avila');
-      const snap = await getDoc(generalRef);
-      if (!snap.exists()) {
-        await setDoc(generalRef, {
-          id: 'mural-geral-laura-de-avila',
-          type: 'group',
-          name: '🏫 Mural Geral - Laura de Ávila',
+    // Garantir Salas Padrão no Supabase
+    async function ensureDefaultGroups() {
+      const defaultGroups = [
+        {
+          id: 'mural-geral-laura',
+          name: 'Mural Geral • Laura de Auricélia',
           description: 'Chat oficial de todos os alunos e professores da escola',
           icon: '🏫',
           color: '#008069',
-          lastMessage: 'Bem-vindos ao Zap da Laura! 🎉',
-          lastMessageTime: Date.now(),
-          createdAt: Date.now()
-        });
+          last_message: 'Bem-vindos ao Zap da Laura! 🎉',
+          last_message_time: new Date().toISOString()
+        },
+        {
+          id: 'recreio-e-esportes',
+          name: 'Pátio & Interclasse',
+          description: 'Combinar jogos, eventos e novidades da escola',
+          icon: '⚽',
+          color: '#ea580c',
+          last_message: 'Quem vai jogar hoje no intervalo?',
+          last_message_time: new Date().toISOString()
+        }
+      ];
+
+      for (const grp of defaultGroups) {
+        await supabase
+          .from('groups')
+          .upsert(grp, { onConflict: 'id', ignoreDuplicates: true });
       }
     }
 
     // Entrar na Interface Principal
-    function enterApp() {
+    function enterApp(profile) {
+      currentUserProfile = profile;
       document.getElementById('login-screen').classList.add('hidden');
       document.getElementById('app-screen').classList.remove('hidden');
 
       // Atualizar cabeçalho do usuário
       const myAvatar = document.getElementById('my-avatar');
-      myAvatar.textContent = currentUserProfile.avatarEmoji;
-      myAvatar.style.backgroundColor = currentUserProfile.avatarColor;
-      document.getElementById('my-name').textContent = currentUserProfile.name;
-      document.getElementById('my-grade').textContent = `${currentUserProfile.grade} • Laura de Ávila`;
+      myAvatar.textContent = currentUserProfile.avatar_emoji;
+      myAvatar.style.backgroundColor = currentUserProfile.avatar_color;
+      document.getElementById('my-name-display').textContent = currentUserProfile.name;
+      document.getElementById('my-grade-display').textContent = `${currentUserProfile.grade} • Laura de Auricélia`;
 
       // Iniciar Listeners em Tempo Real
-      listenToUsers();
-      listenToChats();
-
-      // Heartbeat para manter status Online
-      setInterval(() => {
-        if (currentUser) {
-          updateDoc(getPublicDoc('users', currentUser.uid), {
-            online: true,
-            lastSeen: Date.now()
-          }).catch(() => {});
-        }
-      }, 30000);
+      startRealtimeListeners();
 
       // Abrir Mural Geral automaticamente no Desktop
       if (window.innerWidth >= 768) {
-        openChat('mural-geral-laura-de-avila');
+        selectChat({
+          id: 'mural-geral-laura',
+          type: 'group',
+          title: 'Mural Geral • Laura de Auricélia',
+          subtitle: 'Chat oficial de todos os alunos e professores da escola',
+          avatar: '🏫',
+          color: '#008069'
+        });
       }
     }
 
-    // Ouvir todos os Alunos/Usuários em Tempo Real
-    function listenToUsers() {
-      if (!currentUser) return;
-      onSnapshot(getPublicCollection('users'), (snapshot) => {
-        allUsers = [];
-        snapshot.forEach(docSnap => {
-          allUsers.push(docSnap.data());
-        });
-        // Ordenar por atividade recente
-        allUsers.sort((a, b) => (b.lastSeen || 0) - (a.lastSeen || 0));
-        
-        const othersCount = allUsers.filter(u => u.uid !== currentUser.uid).length;
-        document.getElementById('online-count-badge').textContent = othersCount;
-        renderSidebarList();
-      }, (error) => {
-        console.error("Erro ao ouvir usuários:", error);
-      });
+    // Submeter Formulário de Login
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('input-name').value.trim();
+      const grade = document.getElementById('input-grade').value;
+      if (!name) return;
+
+      const uid = getOrCreateUserId();
+      currentUser = { uid };
+
+      const profile = {
+        uid,
+        name,
+        grade,
+        avatar_emoji: selectedEmoji,
+        avatar_color: selectedColor,
+        online: true,
+        last_seen: new Date().toISOString()
+      };
+
+      localStorage.setItem('zap_laura_profile', JSON.stringify(profile));
+
+      await supabase.from('users').upsert(profile, { onConflict: 'uid' });
+      await ensureDefaultGroups();
+      enterApp(profile);
+    });
+
+    // Buscar e Ouvir Dados em Tempo Real no Supabase
+    async function loadInitialData() {
+      const { data: usersData } = await supabase
+        .from('users')
+        .select('*')
+        .order('last_seen', { ascending: false });
+
+      if (usersData) {
+        onlineUsers = usersData;
+        document.getElementById('online-count-badge').textContent = onlineUsers.length;
+      }
+
+      const { data: groupsData } = await supabase
+        .from('groups')
+        .select('*')
+        .order('last_message_time', { ascending: false });
+
+      if (groupsData) {
+        groupsList = groupsData;
+      }
+
+      renderSidebarLists();
     }
 
-    // Ouvir Conversas e Grupos em Tempo Real
-    function listenToChats() {
-      if (!currentUser) return;
-      onSnapshot(getPublicCollection('chats'), (snapshot) => {
-        allChats = [];
-        snapshot.forEach(docSnap => {
-          const chat = docSnap.data();
-          // Mostrar grupos públicos OU chats privados onde o usuário atual participa
-          if (chat.type === 'group' || (chat.participants && chat.participants.includes(currentUser.uid))) {
-            allChats.push(chat);
-          }
-        });
+    function startRealtimeListeners() {
+      loadInitialData();
 
-        // Garantir que o Mural Geral apareça mesmo se ainda não carregado
-        if (!allChats.some(c => c.id === 'mural-geral-laura-de-avila')) {
-          ensureGeneralSchoolGroup();
+      // Atualizações em tempo real na tabela de usuários e grupos
+      supabase
+        .channel('public-updates')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'users' }, () => {
+          loadInitialData();
+        })
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'groups' }, () => {
+          loadInitialData();
+        })
+        .subscribe();
+
+      // Manter status online atualizado
+      setInterval(() => {
+        if (currentUser && currentUserProfile) {
+          supabase
+            .from('users')
+            .update({ online: true, last_seen: new Date().toISOString() })
+            .eq('uid', currentUser.uid)
+            .then(() => {});
         }
-
-        // Ordenar conversas pela mensagem mais recente (Mural Geral fixado no topo se sem mensagens novas)
-        allChats.sort((a, b) => {
-          if (a.id === 'mural-geral-laura-de-avila') return -1;
-          if (b.id === 'mural-geral-laura-de-avila') return 1;
-          return (b.lastMessageTime || 0) - (a.lastMessageTime || 0);
-        });
-
-        renderSidebarList();
-      }, (error) => {
-        console.error("Erro ao ouvir chats:", error);
-      });
+      }, 45000);
     }
 
     // Renderizar Lista Lateral (Conversas ou Alunos)
-    window.renderSidebarList = function() {
+    window.renderSidebarLists = function() {
       const container = document.getElementById('sidebar-list');
-      const searchTerm = document.getElementById('search-input').value.toLowerCase().trim();
+      const query = document.getElementById('search-input').value.toLowerCase().trim();
       container.innerHTML = '';
 
-      if (sidebarTab === 'chats') {
-        const filteredChats = allChats.filter(chat => {
-          const displayTitle = getChatDisplayInfo(chat).title.toLowerCase();
-          return displayTitle.includes(searchTerm);
-        });
+      if (activeSidebarTab === 'chats') {
+        const filteredGroups = groupsList.filter(g =>
+          (g.name || '').toLowerCase().includes(query) ||
+          (g.description || '').toLowerCase().includes(query)
+        );
 
-        if (filteredChats.length === 0) {
-          container.innerHTML = `
-            <div class="p-8 text-center text-sm text-gray-500 dark:text-gray-400">
-              Nenhuma conversa encontrada.<br/>Vá na aba <strong>Alunos</strong> para chamar alguém!
-            </div>`;
-          return;
-        }
+        const filteredUsers = onlineUsers.filter(u =>
+          u.uid !== currentUser?.uid &&
+          ((u.name || '').toLowerCase().includes(query) || (u.grade || '').toLowerCase().includes(query))
+        );
 
-        filteredChats.forEach(chat => {
-          const info = getChatDisplayInfo(chat);
-          const isActive = chat.id === activeChatId;
-          const timeStr = chat.lastMessageTime ? formatTime(chat.lastMessageTime) : '';
-
+        // Renderizar Grupos
+        filteredGroups.forEach(group => {
+          const isSelected = currentChat?.id === group.id;
           const item = document.createElement('div');
-          item.className = `px-4 py-3 flex items-center gap-3 cursor-pointer transition ${isActive ? 'bg-wa-headerLight dark:bg-wa-hoverDark' : 'hover:bg-wa-hoverLight dark:hover:bg-wa-hoverDark/60'}`;
-          item.onclick = () => openChat(chat.id);
+          item.className = `flex items-center gap-3 px-4 py-3 cursor-pointer transition ${isSelected ? 'bg-wa-headerLight dark:bg-wa-hoverDark' : 'hover:bg-wa-hoverLight dark:hover:bg-wa-hoverDark/60'}`;
+          item.onclick = () => selectChat({
+            id: group.id,
+            type: 'group',
+            title: group.name,
+            subtitle: group.description || 'Grupo da Escola Laura de Auricélia',
+            avatar: group.icon || '📚',
+            color: group.color || '#008069'
+          });
 
           item.innerHTML = `
-            <div class="w-12 h-12 rounded-full flex items-center justify-center text-xl text-white font-bold shrink-0 shadow-xs relative" style="background-color: ${info.color}">
-              ${info.icon}
-              ${info.isOnline ? '<span class="w-3 h-3 rounded-full bg-wa-accent border-2 border-white dark:border-wa-panelDark absolute bottom-0 right-0"></span>' : ''}
-            </div>
-            <div class="flex-1 min-w-0">
-              <div class="flex items-center justify-between gap-2">
-                <h4 class="font-semibold text-sm truncate">${escapeHTML(info.title)}</h4>
-                <span class="text-[11px] text-gray-400 shrink-0">${timeStr}</span>
-              </div>
-              <div class="flex items-center justify-between gap-2 mt-0.5">
-                <p class="text-xs text-gray-500 dark:text-gray-400 truncate">${escapeHTML(chat.lastMessage || info.subtitle)}</p>
-                ${chat.id === 'mural-geral-laura-de-avila' ? '<span class="px-1.5 py-0.5 text-[10px] font-bold bg-emerald-500/15 text-wa-teal dark:text-wa-accent rounded">ESCOLA</span>' : ''}
-              </div>
-            </div>
-          `;
-          container.appendChild(item);
-        });
-      } else {
-        // Aba de Alunos / Contatos
-        const otherUsers = allUsers.filter(u => u.uid !== currentUser.uid && (u.name.toLowerCase().includes(searchTerm) || u.grade.toLowerCase().includes(searchTerm)));
-
-        if (otherUsers.length === 0) {
-          container.innerHTML = `
-            <div class="p-8 text-center text-sm text-gray-500 dark:text-gray-400 space-y-3">
-              <p>Ainda não há outros colegas visíveis aqui.</p>
-              <button onclick="copyInviteLink()" class="px-4 py-2 rounded-full bg-wa-teal text-white text-xs font-semibold shadow">
-                🔗 Copiar Link para Convidar Colegas
-              </button>
-            </div>`;
-          return;
-        }
-
-        otherUsers.forEach(user => {
-          const isRecent = (Date.now() - (user.lastSeen || 0)) < 120000;
-          const item = document.createElement('div');
-          item.className = 'px-4 py-3 flex items-center gap-3 cursor-pointer hover:bg-wa-hoverLight dark:hover:bg-wa-hoverDark/60 transition';
-          item.onclick = () => startPrivateChat(user);
-
-          item.innerHTML = `
-            <div class="w-12 h-12 rounded-full flex items-center justify-center text-xl text-white font-bold shrink-0 relative" style="background-color: ${user.avatarColor || '#008069'}">
-              ${user.avatarEmoji || '😎'}
-              ${isRecent ? '<span class="w-3 h-3 rounded-full bg-wa-accent border-2 border-white dark:border-wa-panelDark absolute bottom-0 right-0"></span>' : ''}
+            <div class="w-12 h-12 rounded-full flex items-center justify-center text-xl text-white shrink-0 shadow-xs" style="background-color: ${group.color || '#008069'}">
+              ${group.icon || '📚'}
             </div>
             <div class="flex-1 min-w-0">
               <div class="flex items-center justify-between">
-                <h4 class="font-semibold text-sm truncate">${escapeHTML(user.name)}</h4>
-                <span class="text-[11px] font-medium px-2 py-0.5 rounded-full bg-gray-100 dark:bg-wa-headerDark text-gray-600 dark:text-gray-300">${escapeHTML(user.grade)}</span>
+                <h4 class="font-semibold text-sm truncate">${escapeHTML(group.name)}</h4>
+                <span class="text-[11px] text-gray-400 shrink-0">${formatTime(group.last_message_time)}</span>
               </div>
-              <p class="text-xs text-wa-teal dark:text-wa-accent mt-0.5">
-                ${isRecent ? '● Online agora • Clique para conversar' : 'Toque para enviar mensagem privada'}
-              </p>
+              <p class="text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5">${escapeHTML(group.last_message || group.description || '')}</p>
             </div>
           `;
+          container.appendChild(item);
+        });
+
+        // Seção de Conversas Diretas com Colegas
+        if (filteredUsers.length > 0) {
+          const divider = document.createElement('div');
+          divider.className = 'px-4 py-2 bg-gray-50 dark:bg-wa-headerDark/40 text-[11px] font-bold uppercase tracking-wider text-wa-teal dark:text-wa-accent';
+          divider.textContent = 'Conversas Diretas (Alunos & Professores)';
+          container.appendChild(divider);
+
+          filteredUsers.forEach(user => {
+            const dmId = getPrivateChatId(currentUser.uid, user.uid);
+            const isSelected = currentChat?.id === dmId;
+            const item = document.createElement('div');
+            item.className = `flex items-center gap-3 px-4 py-3 cursor-pointer transition ${isSelected ? 'bg-wa-headerLight dark:bg-wa-hoverDark' : 'hover:bg-wa-hoverLight dark:hover:bg-wa-hoverDark/60'}`;
+            item.onclick = () => openDirectMessage(user);
+
+            item.innerHTML = `
+              <div class="relative shrink-0">
+                <div class="w-11 h-11 rounded-full flex items-center justify-center text-lg text-white font-bold" style="background-color: ${user.avatar_color || '#0284c7'}">
+                  ${user.avatar_emoji || '🎓'}
+                </div>
+                <span class="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-white dark:border-wa-panelDark rounded-full"></span>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between">
+                  <h4 class="font-semibold text-sm truncate">${escapeHTML(user.name)}</h4>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-gray-100 dark:bg-wa-headerDark text-gray-600 dark:text-gray-300 font-medium">${escapeHTML(user.grade || 'Aluno')}</span>
+                </div>
+                <p class="text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5">Toque para conversar no privado</p>
+              </div>
+            `;
+            container.appendChild(item);
+          });
+        }
+      } else {
+        // Aba: Galera da Escola
+        const filteredUsers = onlineUsers.filter(u =>
+          (u.name || '').toLowerCase().includes(query) ||
+          (u.grade || '').toLowerCase().includes(query)
+        );
+
+        if (filteredUsers.length === 0) {
+          container.innerHTML = `<div class="p-8 text-center text-sm text-gray-400">Nenhum aluno ou professor encontrado.</div>`;
+          return;
+        }
+
+        filteredUsers.forEach(user => {
+          const isMe = user.uid === currentUser?.uid;
+          const item = document.createElement('div');
+          item.className = 'flex items-center justify-between px-4 py-3 hover:bg-wa-hoverLight dark:hover:bg-wa-hoverDark/60 transition';
+          item.innerHTML = `
+            <div class="flex items-center gap-3 min-w-0">
+              <div class="w-11 h-11 rounded-full flex items-center justify-center text-lg text-white shrink-0" style="background-color: ${user.avatar_color || '#008069'}">
+                ${user.avatar_emoji || '🎓'}
+              </div>
+              <div class="min-w-0">
+                <h4 class="font-semibold text-sm truncate">${escapeHTML(user.name)} ${isMe ? '<span class="text-xs text-wa-teal font-normal">(Você)</span>' : ''}</h4>
+                <p class="text-xs text-gray-500 dark:text-gray-400 truncate">${escapeHTML(user.grade || 'Escola Laura de Auricélia')}</p>
+              </div>
+            </div>
+            ${!isMe ? `<button class="px-3 py-1.5 rounded-full bg-wa-teal/10 text-wa-teal dark:text-wa-accent text-xs font-semibold hover:bg-wa-teal hover:text-white transition">Conversar</button>` : ''}
+          `;
+          if (!isMe) {
+            item.querySelector('button').onclick = () => openDirectMessage(user);
+          }
           container.appendChild(item);
         });
       }
     };
 
-    document.getElementById('search-input').addEventListener('input', renderSidebarList);
-
-    // Obter Título/Ícone corretos para Grupo ou Chat 1-a-1
-    function getChatDisplayInfo(chat) {
-      if (chat.type === 'group') {
-        return {
-          title: chat.name,
-          subtitle: chat.description || 'Grupo escolar',
-          icon: chat.icon || '📚',
-          color: chat.color || '#008069',
-          isOnline: false
-        };
-      }
-      // Chat Privado 1-a-1
-      const otherUid = chat.participants?.find(id => id !== currentUser.uid);
-      const otherUser = allUsers.find(u => u.uid === otherUid);
-      if (otherUser) {
-        const isRecent = (Date.now() - (otherUser.lastSeen || 0)) < 120000;
-        return {
-          title: otherUser.name,
-          subtitle: `${otherUser.grade} • ${isRecent ? 'Online agora' : 'Laura de Ávila'}`,
-          icon: otherUser.avatarEmoji || '😎',
-          color: otherUser.avatarColor || '#008069',
-          isOnline: isRecent
-        };
-      }
-      return {
-        title: chat.fallbackName || 'Colega da Escola',
-        subtitle: 'Conversa privada',
-        icon: '💬',
-        color: '#008069',
-        isOnline: false
-      };
+    // Gerar ID Único para Chat Privado entre 2 Usuários
+    function getPrivateChatId(uid1, uid2) {
+      return [uid1, uid2].sort().join('__');
     }
 
-    // Iniciar ou Abrir Chat Privado 1-a-1 entre dois alunos
-    window.startPrivateChat = async function(targetUser) {
-      if (!currentUser) return;
-      // ID determinístico ordenado para que ambos abram exatamente a mesma sala!
-      const sortedIds = [currentUser.uid, targetUser.uid].sort();
-      const privateChatId = `dm_${sortedIds[0]}_${sortedIds[1]}`;
+    // Abrir Conversa Privada
+    function openDirectMessage(otherUser) {
+      const dmId = getPrivateChatId(currentUser.uid, otherUser.uid);
+      selectChat({
+        id: dmId,
+        type: 'dm',
+        title: otherUser.name,
+        subtitle: `${otherUser.grade || 'Aluno'} • Escola Laura de Auricélia`,
+        avatar: otherUser.avatar_emoji || '🎓',
+        color: otherUser.avatar_color || '#0284c7'
+      });
+    }
 
-      const chatRef = getPublicDoc('chats', privateChatId);
-      const snap = await getDoc(chatRef);
-      if (!snap.exists()) {
-        await setDoc(chatRef, {
-          id: privateChatId,
-          type: 'private',
-          participants: sortedIds,
-          fallbackName: targetUser.name,
-          lastMessage: '',
-          lastMessageTime: Date.now(),
-          createdAt: Date.now()
-        });
-      }
-
-      switchSidebarTab('chats');
-      openChat(privateChatId);
-    };
-
-    // Abrir uma Conversa na Tela Principal
-    window.openChat = async function(chatId) {
-      activeChatId = chatId;
+    // Selecionar e Abrir uma Conversa
+    async function selectChat(chatObj) {
+      currentChat = chatObj;
       cancelReply();
 
-      // Responsividade Mobile: Esconder Sidebar e Mostrar Chat
+      // Responsividade Mobile
       if (window.innerWidth < 768) {
         document.getElementById('sidebar-panel').classList.add('hidden');
         document.getElementById('chat-panel').classList.remove('hidden');
@@ -860,354 +798,298 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
       document.getElementById('empty-chat-state').classList.add('hidden');
       document.getElementById('active-chat-container').classList.remove('hidden');
-      document.getElementById('active-chat-container').classList.add('flex');
 
-      const chatObj = allChats.find(c => c.id === chatId) || {
-        id: chatId,
-        type: 'group',
-        name: '🏫 Mural Geral - Laura de Ávila',
-        description: 'Chat oficial de todos os alunos e professores',
-        icon: '🏫',
-        color: '#008069'
-      };
-
-      const info = getChatDisplayInfo(chatObj);
+      // Atualizar Cabeçalho do Chat
       const avatarEl = document.getElementById('active-chat-avatar');
-      avatarEl.textContent = info.icon;
-      avatarEl.style.backgroundColor = info.color;
-      document.getElementById('active-chat-title').textContent = info.title;
-      document.getElementById('active-chat-subtitle').textContent = info.subtitle;
+      avatarEl.textContent = chatObj.avatar;
+      avatarEl.style.backgroundColor = chatObj.color;
+      document.getElementById('active-chat-title').textContent = chatObj.title;
+      document.getElementById('active-chat-subtitle').textContent = chatObj.subtitle;
 
-      renderSidebarList();
-      listenToMessages(chatId);
-      document.getElementById('message-input').focus();
-    };
+      renderSidebarLists();
 
-    window.closeMobileChat = function() {
-      activeChatId = null;
-      document.getElementById('chat-panel').classList.add('hidden');
-      document.getElementById('chat-panel').classList.remove('flex');
-      document.getElementById('sidebar-panel').classList.remove('hidden');
-    };
-
-    // Ouvir Mensagens do Chat Ativo em Tempo Real
-    function listenToMessages(chatId) {
-      if (unsubscribeMessages) {
-        unsubscribeMessages();
+      // Cancelar inscrição anterior se existir
+      if (messageSubscription) {
+        supabase.removeChannel(messageSubscription);
       }
 
-      const messagesContainer = document.getElementById('messages-container');
-      messagesContainer.innerHTML = `<div class="text-center text-xs text-gray-500 py-4">Carregando mensagens...</div>`;
+      // Carregar mensagens iniciais desta sala
+      const { data: initialMsgs } = await supabase
+        .from('messages')
+        .select('*')
+        .eq('chat_id', chatObj.id)
+        .order('created_at', { ascending: true })
+        .limit(150);
 
-      // Busca todas as mensagens da coleção pública e filtra/ordena no cliente (evita erros de índice composto)
-      unsubscribeMessages = onSnapshot(getPublicCollection('messages'), (snapshot) => {
-        const msgs = [];
-        snapshot.forEach(docSnap => {
-          const data = docSnap.data();
-          if (data.chatId === chatId) {
-            msgs.push({ docId: docSnap.id, ...data });
+      currentMessages = initialMsgs || [];
+      renderMessages(currentMessages);
+
+      // Ouvir novas mensagens em tempo real
+      messageSubscription = supabase
+        .channel(`chat-${chatObj.id}`)
+        .on(
+          'postgres_changes',
+          {
+            event: 'INSERT',
+            schema: 'public',
+            table: 'messages',
+            filter: `chat_id=eq.${chatObj.id}`
+          },
+          (payload) => {
+            if (!currentMessages.some(m => m.id === payload.new.id)) {
+              currentMessages.push(payload.new);
+              renderMessages(currentMessages);
+            }
           }
-        });
-
-        // Ordenar cronologicamente no cliente
-        msgs.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
-        activeChatMessages = msgs;
-        renderMessages(msgs);
-      }, (error) => {
-        console.error("Erro ao ouvir mensagens:", error);
-      });
+        )
+        .subscribe();
     }
 
-    // Renderizar Balões de Mensagens
+    // Renderizar Balões de Mensagem
     function renderMessages(messages) {
       const container = document.getElementById('messages-container');
-      const wasAtBottom = container.scrollHeight - container.scrollTop <= container.clientHeight + 120;
-
-      container.innerHTML = `
-        <div class="flex justify-center my-2">
-          <span class="px-3 py-1 rounded-lg bg-[#ffeecd] dark:bg-[#182229] text-[#54656f] dark:text-[#8696a0] text-[11px] shadow-xs text-center max-w-md">
-            🔒 Mensagens protegidas no <strong>Zap da Laura</strong>. Respeite os colegas e professores da Escola Laura de Ávila!
-          </span>
-        </div>
-      `;
+      container.innerHTML = '';
 
       if (messages.length === 0) {
-        container.innerHTML += `
-          <div class="text-center my-8">
-            <span class="px-4 py-2 rounded-full bg-white/80 dark:bg-wa-headerDark/80 text-xs text-gray-500 dark:text-gray-400 shadow-xs">
-              Nenhuma mensagem ainda. Diga um "Oi, galera!" 👋
-            </span>
+        container.innerHTML = `
+          <div class="flex justify-center my-6">
+            <div class="px-4 py-2 rounded-xl bg-amber-100/90 dark:bg-wa-headerDark text-amber-900 dark:text-amber-200 text-xs text-center shadow-xs max-w-sm">
+              🔒 Mensagens protegidas na rede escolar da <strong>Escola Laura de Auricélia</strong>. Diga um "Oi, galera!" 👋
+            </div>
           </div>
         `;
         return;
       }
 
       messages.forEach(msg => {
-        const isMine = msg.senderId === currentUser.uid;
+        const isMine = msg.sender_id === currentUser?.uid;
         const wrapper = document.createElement('div');
-        wrapper.className = `flex flex-col ${isMine ? 'items-end' : 'items-start'} group relative`;
+        wrapper.className = `flex flex-col ${isMine ? 'items-end' : 'items-start'} animate-pop`;
 
-        // Formatar Reações
-        const reactions = msg.reactions || {};
-        const reactionEntries = Object.entries(reactions).filter(([_, users]) => users && users.length > 0);
-        let reactionsHTML = '';
-        if (reactionEntries.length > 0) {
-          reactionsHTML = `
-            <div class="flex gap-1 mt-1 ${isMine ? 'justify-end' : 'justify-start'}">
-              ${reactionEntries.map(([emoji, users]) => `
-                <button onclick="toggleReaction('${msg.docId}', '${emoji}')" class="px-1.5 py-0.5 rounded-full text-xs bg-white dark:bg-wa-headerDark border border-gray-200 dark:border-gray-700 shadow-xs flex items-center gap-1 hover:scale-105 transition">
-                  <span>${emoji}</span>
-                  <span class="text-[10px] font-semibold text-gray-600 dark:text-gray-300">${users.length}</span>
-                </button>
-              `).join('')}
-            </div>
-          `;
-        }
+        const bubble = document.createElement('div');
+        bubble.className = `relative max-w-[85%] sm:max-w-[68%] px-3.5 py-2 rounded-2xl shadow-xs text-sm break-words ${
+          isMine
+            ? 'bg-wa-lightGreen dark:bg-wa-darkGreen text-gray-900 dark:text-gray-100 rounded-tr-none bubble-out'
+            : 'bg-white dark:bg-wa-bubbleInDark text-gray-900 dark:text-gray-100 rounded-tl-none bubble-in'
+        }`;
 
         // Bloco de Resposta Citada (Reply)
         let replyHTML = '';
-        if (msg.replyTo) {
+        if (msg.reply_to) {
           replyHTML = `
             <div class="mb-1.5 p-2 rounded-lg bg-black/5 dark:bg-black/25 border-l-4 border-wa-teal text-xs">
-              <p class="font-bold text-wa-teal dark:text-wa-accent">${escapeHTML(msg.replyTo.senderName)}</p>
-              <p class="text-gray-600 dark:text-gray-300 truncate max-w-[240px]">${escapeHTML(msg.replyTo.text)}</p>
+              <p class="font-bold text-wa-teal dark:text-wa-accent truncate">${escapeHTML(msg.reply_to.senderName)}</p>
+              <p class="text-gray-600 dark:text-gray-300 truncate">${escapeHTML(msg.reply_to.text)}</p>
             </div>
           `;
         }
 
-        wrapper.innerHTML = `
-          <div class="relative max-w-[85%] sm:max-w-[68%] px-3 py-2 rounded-xl shadow-xs text-sm ${
-            isMine 
-              ? 'bg-wa-lightGreen dark:bg-wa-darkGreen text-[#111b21] dark:text-[#e9edef] rounded-tr-none bubble-out' 
-              : 'bg-white dark:bg-wa-bubbleInDark text-[#111b21] dark:text-[#e9edef] rounded-tl-none bubble-in'
-          }">
-            ${!isMine ? `
-              <div class="flex items-center gap-1.5 mb-0.5">
-                <span class="font-bold text-xs" style="color: ${msg.senderColor || '#008069'}">${escapeHTML(msg.senderName)}</span>
-                <span class="text-[10px] px-1.5 py-0.2 rounded bg-black/5 dark:bg-white/10 text-gray-500 dark:text-gray-400">${escapeHTML(msg.senderGrade || '')}</span>
-              </div>
-            ` : ''}
-
-            ${replyHTML}
-
-            <div class="break-words leading-relaxed whitespace-pre-wrap">${linkifyText(escapeHTML(msg.text))}</div>
-
-            <div class="flex items-center justify-end gap-1 mt-1 -mb-0.5">
-              <span class="text-[10px] text-gray-500 dark:text-gray-400">${formatTime(msg.timestamp)}</span>
-              ${isMine ? '<span class="text-sky-500 text-xs font-bold" title="Entregue">✓✓</span>' : ''}
+        // Cabeçalho do Remetente (em grupos ou mensagens recebidas)
+        let senderHeaderHTML = '';
+        if (!isMine) {
+          senderHeaderHTML = `
+            <div class="flex items-center gap-1.5 mb-0.5">
+              <span class="text-xs font-bold" style="color: ${msg.sender_color || '#008069'}">${escapeHTML(msg.sender_name || 'Aluno')}</span>
+              <span class="text-[10px] px-1.5 py-0.2 rounded bg-gray-100 dark:bg-black/30 text-gray-500 dark:text-gray-400">${escapeHTML(msg.sender_grade || '')}</span>
             </div>
+          `;
+        }
 
-            <!-- Barra Flutuante de Ações (Reagir / Responder) -->
-            <div class="hidden group-hover:flex items-center gap-1 absolute -top-7 ${isMine ? 'right-0' : 'left-0'} bg-white dark:bg-wa-headerDark shadow-md border border-gray-200 dark:border-gray-700 rounded-full px-2 py-0.5 z-10">
-              <button onclick="toggleReaction('${msg.docId}', '👍')" class="hover:scale-125 transition text-sm">👍</button>
-              <button onclick="toggleReaction('${msg.docId}', '❤️')" class="hover:scale-125 transition text-sm">❤️</button>
-              <button onclick="toggleReaction('${msg.docId}', '😂')" class="hover:scale-125 transition text-sm">😂</button>
-              <button onclick="toggleReaction('${msg.docId}', '🔥')" class="hover:scale-125 transition text-sm">🔥</button>
-              <span class="text-gray-300 dark:text-gray-600 mx-0.5">|</span>
-              <button onclick="startReply('${msg.docId}')" class="text-xs font-semibold text-wa-teal dark:text-wa-accent px-1 hover:underline">Responder</button>
-            </div>
+        // Formatar links clicáveis
+        const formattedText = linkifyText(escapeHTML(msg.text || ''));
+
+        bubble.innerHTML = `
+          ${senderHeaderHTML}
+          ${replyHTML}
+          <div class="leading-relaxed whitespace-pre-wrap">${formattedText}</div>
+          <div class="flex items-center justify-end gap-1.5 mt-1 -mb-0.5">
+            <button onclick='triggerReply(${JSON.stringify({ id: msg.id, senderName: msg.sender_name, text: msg.text }).replace(/'/g, "&apos;")})' class="text-[10px] text-gray-400 hover:text-wa-teal transition mr-1" title="Responder">Responder</button>
+            <span class="text-[10px] text-gray-500 dark:text-gray-400">${formatTime(msg.created_at)}</span>
+            ${isMine ? '<span class="text-sky-500 text-xs font-bold">✓✓</span>' : ''}
           </div>
-          ${reactionsHTML}
         `;
 
+        wrapper.appendChild(bubble);
         container.appendChild(wrapper);
       });
 
-      if (wasAtBottom || messages.length <= 15) {
-        container.scrollTop = container.scrollHeight;
-      }
+      // Rolar automaticamente para a última mensagem
+      container.scrollTop = container.scrollHeight;
     }
 
     // Enviar Nova Mensagem
-    window.sendMessage = async function() {
-      if (!currentUser || !activeChatId) return;
+    document.getElementById('message-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
       const input = document.getElementById('message-input');
       const text = input.value.trim();
-      if (!text) return;
+      if (!text || !currentChat || !currentUserProfile) return;
 
       input.value = '';
-      document.getElementById('emoji-picker').classList.add('hidden');
-
-      const now = Date.now();
-      const newMsg = {
-        chatId: activeChatId,
-        senderId: currentUser.uid,
-        senderName: currentUserProfile.name,
-        senderGrade: currentUserProfile.grade,
-        senderColor: currentUserProfile.avatarColor,
-        text,
-        timestamp: now,
-        reactions: {},
-        replyTo: replyingTo ? { ...replyingTo } : null
-      };
-
+      input.style.height = 'auto';
+      const currentReply = replyToMessage;
       cancelReply();
 
-      try {
-        await addDoc(getPublicCollection('messages'), newMsg);
-        await updateDoc(getPublicDoc('chats', activeChatId), {
-          lastMessage: `${currentUserProfile.name}: ${text}`,
-          lastMessageTime: now
-        });
-      } catch (err) {
-        console.error("Erro ao enviar mensagem:", err);
-        showToast("Falha ao enviar mensagem. Tente novamente.", "error");
-      }
-    };
+      const payload = {
+        chat_id: currentChat.id,
+        text,
+        sender_id: currentUser.uid,
+        sender_name: currentUserProfile.name,
+        sender_grade: currentUserProfile.grade,
+        sender_avatar: currentUserProfile.avatar_emoji,
+        sender_color: currentUserProfile.avatar_color,
+        reply_to: currentReply
+      };
 
-    // Enviar com tecla Enter
-    document.getElementById('message-input').addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        sendMessage();
+      const { data, error } = await supabase
+        .from('messages')
+        .insert(payload)
+        .select()
+        .single();
+
+      if (!error && data) {
+        if (!currentMessages.some(m => m.id === data.id)) {
+          currentMessages.push(data);
+          renderMessages(currentMessages);
+        }
+
+        // Atualizar prévia na lista de grupos se for um grupo
+        if (currentChat.type === 'group') {
+          await supabase
+            .from('groups')
+            .update({
+              last_message: `${currentUserProfile.name}: ${text}`,
+              last_message_time: new Date().toISOString()
+            })
+            .eq('id', currentChat.id);
+        }
       }
     });
 
-    // Reagir a uma Mensagem em Tempo Real
-    window.toggleReaction = async function(docId, emoji) {
-      if (!currentUser) return;
-      const msg = activeChatMessages.find(m => m.docId === docId);
-      if (!msg) return;
-
-      const reactions = { ...(msg.reactions || {}) };
-      const currentUsers = reactions[emoji] || [];
-
-      if (currentUsers.includes(currentUser.uid)) {
-        reactions[emoji] = currentUsers.filter(id => id !== currentUser.uid);
-      } else {
-        reactions[emoji] = [...currentUsers, currentUser.uid];
+    // Enviar com Enter (Shift+Enter quebra linha)
+    document.getElementById('message-input').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        document.getElementById('message-form').dispatchEvent(new Event('submit'));
       }
+    });
 
-      try {
-        await updateDoc(getPublicDoc('messages', docId), { reactions });
-      } catch (err) {
-        console.error("Erro ao reagir:", err);
-      }
-    };
+    // Criar Novo Grupo Escolar
+    document.getElementById('create-group-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('group-name-input').value.trim();
+      const desc = document.getElementById('group-desc-input').value.trim();
+      if (!name) return;
 
-    // Sistema de Resposta (Reply)
-    window.startReply = function(docId) {
-      const msg = activeChatMessages.find(m => m.docId === docId);
-      if (!msg) return;
-
-      replyingTo = {
-        docId: msg.docId,
-        senderName: msg.senderName,
-        text: msg.text
+      const randomColor = COLORS[Math.floor(Math.random() * COLORS.length)];
+      const newGroup = {
+        id: 'grp_' + Date.now().toString(36),
+        name,
+        description: desc || `Grupo criado por ${currentUserProfile.name}`,
+        icon: selectedGroupIcon,
+        color: randomColor,
+        created_by: currentUser.uid,
+        last_message: `${currentUserProfile.name} criou o grupo "${name}"`,
+        last_message_time: new Date().toISOString()
       };
 
-      document.getElementById('reply-to-sender').textContent = `Respondendo a ${msg.senderName}`;
-      document.getElementById('reply-to-text').textContent = msg.text;
+      const { error } = await supabase.from('groups').insert(newGroup);
+      if (!error) {
+        closeCreateGroupModal();
+        document.getElementById('group-name-input').value = '';
+        document.getElementById('group-desc-input').value = '';
+        showToast('Grupo escolar criado com sucesso! 🎉');
+
+        await loadInitialData();
+        selectChat({
+          id: newGroup.id,
+          type: 'group',
+          title: newGroup.name,
+          subtitle: newGroup.description,
+          avatar: newGroup.icon,
+          color: newGroup.color
+        });
+      }
+    });
+
+    // Funções de UI e Utilitários
+    window.triggerReply = function(msgObj) {
+      replyToMessage = msgObj;
       document.getElementById('reply-preview-bar').classList.remove('hidden');
+      document.getElementById('reply-to-name').textContent = msgObj.senderName;
+      document.getElementById('reply-to-text').textContent = msgObj.text;
       document.getElementById('message-input').focus();
     };
 
     window.cancelReply = function() {
-      replyingTo = null;
+      replyToMessage = null;
       document.getElementById('reply-preview-bar').classList.add('hidden');
     };
 
-    // Criar Novo Grupo Escolar
-    window.openNewGroupModal = () => document.getElementById('new-group-modal').classList.remove('hidden');
-    window.closeNewGroupModal = () => document.getElementById('new-group-modal').classList.add('hidden');
-
-    document.getElementById('new-group-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      if (!currentUser) return;
-
-      const name = document.getElementById('group-name-input').value.trim();
-      const description = document.getElementById('group-desc-input').value.trim() || `Criado por ${currentUserProfile.name}`;
-      if (!name) return;
-
-      const groupId = `grp_${Date.now()}`;
-      try {
-        await setDoc(getPublicDoc('chats', groupId), {
-          id: groupId,
-          type: 'group',
-          name,
-          description,
-          icon: selectedGroupIcon,
-          color: currentUserProfile.avatarColor,
-          lastMessage: `${currentUserProfile.name} criou o grupo "${name}"`,
-          lastMessageTime: Date.now(),
-          createdAt: Date.now()
-        });
-
-        document.getElementById('group-name-input').value = '';
-        document.getElementById('group-desc-input').value = '';
-        closeNewGroupModal();
-        switchSidebarTab('chats');
-        openChat(groupId);
-        showToast("Grupo escolar criado com sucesso! 🎉");
-      } catch (err) {
-        console.error("Erro ao criar grupo:", err);
-        showToast("Erro ao criar grupo.", "error");
-      }
-    });
-
-    // Avisos Rápidos Escolares
-    window.openQuickNoticeModal = () => document.getElementById('quick-notice-modal').classList.remove('hidden');
-    window.closeQuickNoticeModal = () => document.getElementById('quick-notice-modal').classList.add('hidden');
-    window.sendPredefinedNotice = (text) => {
-      closeQuickNoticeModal();
-      document.getElementById('message-input').value = text;
-      sendMessage();
-    };
-
-    // Alternar Abas da Barra Lateral
     window.switchSidebarTab = function(tab) {
-      sidebarTab = tab;
-      const btnChats = document.getElementById('tab-chats');
-      const btnUsers = document.getElementById('tab-users');
+      activeSidebarTab = tab;
+      const tabChats = document.getElementById('tab-chats');
+      const tabUsers = document.getElementById('tab-users');
 
       if (tab === 'chats') {
-        btnChats.className = 'flex-1 py-1.5 px-3 rounded-full text-xs font-semibold bg-emerald-100 text-wa-teal dark:bg-wa-tealDark dark:text-emerald-100 transition';
-        btnUsers.className = 'flex-1 py-1.5 px-3 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 dark:bg-wa-headerDark dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-wa-hoverDark transition flex items-center justify-center gap-1.5';
+        tabChats.className = 'flex-1 py-2.5 text-wa-teal dark:text-wa-accent border-b-2 border-wa-teal dark:border-wa-accent transition';
+        tabUsers.className = 'flex-1 py-2.5 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition flex items-center justify-center gap-1.5';
       } else {
-        btnUsers.className = 'flex-1 py-1.5 px-3 rounded-full text-xs font-semibold bg-emerald-100 text-wa-teal dark:bg-wa-tealDark dark:text-emerald-100 transition flex items-center justify-center gap-1.5';
-        btnChats.className = 'flex-1 py-1.5 px-3 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 dark:bg-wa-headerDark dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-wa-hoverDark transition';
+        tabUsers.className = 'flex-1 py-2.5 text-wa-teal dark:text-wa-accent border-b-2 border-wa-teal dark:border-wa-accent transition flex items-center justify-center gap-1.5';
+        tabChats.className = 'flex-1 py-2.5 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition';
       }
-      renderSidebarList();
+      renderSidebarLists();
     };
 
-    // Seletor de Emoji
+    window.closeMobileChat = function() {
+      document.getElementById('chat-panel').classList.add('hidden');
+      document.getElementById('chat-panel').classList.remove('flex');
+      document.getElementById('sidebar-panel').classList.remove('hidden');
+    };
+
+    window.openCreateGroupModal = function() {
+      document.getElementById('create-group-modal').classList.remove('hidden');
+    };
+
+    window.closeCreateGroupModal = function() {
+      document.getElementById('create-group-modal').classList.add('hidden');
+    };
+
+    window.toggleQuickTemplates = function() {
+      document.getElementById('quick-templates-modal').classList.toggle('hidden');
+    };
+
+    window.insertTemplate = function(text) {
+      const inp = document.getElementById('message-input');
+      inp.value = text;
+      toggleQuickTemplates();
+      inp.focus();
+    };
+
     window.toggleEmojiPicker = function() {
       document.getElementById('emoji-picker').classList.toggle('hidden');
     };
 
-    // Modo Claro / Escuro
     window.toggleDarkMode = function() {
       document.documentElement.classList.toggle('dark');
     };
 
-    // Copiar Link de Convite (Usando execCommand para compatibilidade com iframes)
-    window.copyInviteLink = function() {
+    window.shareAppLink = function() {
       const url = window.location.href;
       const tempInput = document.createElement('input');
       tempInput.value = url;
       document.body.appendChild(tempInput);
       tempInput.select();
-      try {
-        document.execCommand('copy');
-        showToast("Link do Zap da Laura copiado! Mande no grupo da turma 📋✨");
-      } catch (e) {
-        showToast("Copie o endereço da barra do navegador para convidar!", "info");
-      }
+      document.execCommand('copy');
       document.body.removeChild(tempInput);
+      showToast('Link do Zap da Laura copiado! Mande no grupo da turma! 🚀');
     };
 
-    // Utilitários
-    function showToast(message, type = 'success') {
-      const container = document.getElementById('toast-container');
-      const toast = document.createElement('div');
-      const bg = type === 'error' ? 'bg-red-600' : 'bg-wa-teal';
-      toast.className = `${bg} text-white px-4 py-3 rounded-xl shadow-lg text-xs font-semibold animate-pop max-w-xs`;
+    function showToast(message) {
+      const toast = document.getElementById('toast');
       toast.textContent = message;
-      container.appendChild(toast);
+      toast.classList.remove('opacity-0');
       setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.transition = 'opacity 0.3s';
-        setTimeout(() => toast.remove(), 300);
+        toast.classList.add('opacity-0');
       }, 3200);
     }
 
@@ -1219,19 +1101,18 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
     function escapeHTML(str) {
       if (!str) return '';
-      return str.replace(/[&<>"']/g, m => ({
-        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      return str.replace(/[&<>'"]/g, m => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
       }[m]));
     }
 
     function linkifyText(text) {
       const urlRegex = /(https?:\/\/[^\s]+)/g;
-      return text.replace(urlRegex, url => `<a href="${url}" target="_blank" rel="noopener noreferrer" class="underline text-sky-600 dark:text-sky-400 break-all">${url}</a>`);
+      return text.replace(urlRegex, url => `<a href="${url}" target="_blank" rel="noopener noreferrer" class="underline text-sky-600 dark:text-sky-400">${url}</a>`);
     }
 
     // Boot
     initLoginUI();
-    initAuth();
   </script>
 </body>
-          </html>
+</html>
