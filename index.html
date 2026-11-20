@@ -2,19 +2,27 @@
 <html lang="pt-BR" class="light">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>Zap da Laura • Escola Laura de Auricélia</title>
+
+  <!-- Tailwind CSS Play CDN (v3) -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Fonte Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Supabase JS v2 UMD (evita falhas de submódulos ESM sem bundler no navegador) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
   <script>
     tailwind.config = {
       darkMode: 'class',
       theme: {
         extend: {
           fontFamily: {
-            sans: ['Inter', 'sans-serif'],
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
           },
           colors: {
             wa: {
@@ -33,39 +41,69 @@
               borderLight: '#e9edef',
               borderDark: '#222d34',
               bubbleInDark: '#202c33',
-              accent: '#25d366'
-            }
-          }
-        }
+              accent: '#25d366',
+            },
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    :root {
+      --app-height: 100vh;
+    }
+    @supports (height: 100dvh) {
+      :root {
+        --app-height: 100dvh;
       }
     }
-  </script>
-  <style>
+
+    html, body {
+      height: var(--app-height);
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      overscroll-behavior: none;
+    }
+
+    /* Papel de parede estilo WhatsApp */
     .chat-wallpaper {
       background-color: #efeae2;
-      background-image: radial-gradient(#d4cdc3 0.85px, transparent 0.85px), radial-gradient(#d4cdc3 0.85px, #efeae2 0.85px);
-      background-size: 34px 34px;
-      background-position: 0 0, 17px 17px;
+      background-image:
+        radial-gradient(#d4cdc3 0.9px, transparent 0.9px),
+        radial-gradient(#d4cdc3 0.9px, #efeae2 0.9px);
+      background-size: 32px 32px;
+      background-position: 0 0, 16px 16px;
     }
     .dark .chat-wallpaper {
       background-color: #0b141a;
-      background-image: radial-gradient(#1b272f 0.85px, transparent 0.85px), radial-gradient(#1b272f 0.85px, #0b141a 0.85px);
-      background-size: 34px 34px;
-      background-position: 0 0, 17px 17px;
+      background-image:
+        radial-gradient(#1b272f 0.9px, transparent 0.9px),
+        radial-gradient(#1b272f 0.9px, #0b141a 0.9px);
+      background-size: 32px 32px;
+      background-position: 0 0, 16px 16px;
     }
 
+    /* Scrollbar discreta */
     ::-webkit-scrollbar {
       width: 6px;
+      height: 6px;
     }
     ::-webkit-scrollbar-track {
       background: transparent;
     }
     ::-webkit-scrollbar-thumb {
-      background: rgba(134, 150, 160, 0.4);
+      background: rgba(134, 150, 160, 0.42);
       border-radius: 999px;
     }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(134, 150, 160, 0.65);
+    }
 
-    .bubble-out::after {
+    /* Cauda exibida apenas na primeira bolha da sequência */
+    .bubble-out.has-tail::after {
       content: "";
       position: absolute;
       top: 0;
@@ -75,11 +113,11 @@
       border-top: 10px solid #d9fdd3;
       border-right: 10px solid transparent;
     }
-    .dark .bubble-out::after {
+    .dark .bubble-out.has-tail::after {
       border-top-color: #005c4b;
     }
 
-    .bubble-in::before {
+    .bubble-in.has-tail::before {
       content: "";
       position: absolute;
       top: 0;
@@ -89,35 +127,69 @@
       border-top: 10px solid #ffffff;
       border-left: 10px solid transparent;
     }
-    .dark .bubble-in::before {
+    .dark .bubble-in.has-tail::before {
       border-top-color: #202c33;
     }
 
     @keyframes popIn {
-      0% { transform: scale(0.95); opacity: 0; }
+      0% { transform: scale(0.96); opacity: 0; }
       100% { transform: scale(1); opacity: 1; }
     }
     .animate-pop {
       animation: popIn 0.16s ease-out forwards;
     }
+
+    @keyframes highlightFlash {
+      0% { box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.85); }
+      100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+    }
+    .flash-highlight {
+      animation: highlightFlash 1.4s ease-out;
+    }
+
+    @keyframes typingBounce {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.45; }
+      30% { transform: translateY(-3px); opacity: 1; }
+    }
+    .typing-dot {
+      display: inline-block;
+      width: 5px;
+      height: 5px;
+      border-radius: 999px;
+      background-color: currentColor;
+      animation: typingBounce 1.1s infinite ease-in-out;
+    }
+    .typing-dot:nth-child(2) { animation-delay: 0.16s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.32s; }
   </style>
 </head>
-<body class="bg-wa-bgLight dark:bg-wa-bgDark text-gray-800 dark:text-gray-100 h-screen w-screen overflow-hidden select-none sm:select-auto">
+<body class="bg-wa-bgLight dark:bg-wa-bgDark text-gray-800 dark:text-gray-100 font-sans select-none sm:select-auto">
 
-  <!-- TELA 1: LOGIN / BOAS-VINDAS ESCOLAR -->
-  <div id="login-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-wa-teal via-[#00a884] to-emerald-800 p-4">
-    <div class="bg-white dark:bg-wa-panelDark w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-pop">
-      <div class="bg-wa-teal p-6 text-white text-center relative">
+  <!-- ===================================================================== -->
+  <!-- TELA 1: LOGIN / BOAS-VINDAS                                           -->
+  <!-- ===================================================================== -->
+  <div id="login-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-wa-teal via-[#00a884] to-emerald-900 p-4 overflow-y-auto">
+    <div class="bg-white dark:bg-wa-panelDark w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-pop my-auto">
+
+      <div class="bg-wa-teal px-6 py-5 text-white text-center relative">
         <div class="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-inner">
           <span class="text-3xl">💬</span>
         </div>
         <h1 class="text-2xl font-bold tracking-tight">Zap da Laura</h1>
-        <p class="text-emerald-100 text-sm mt-1">Comunidade Oficial • Escola Laura de Auricélia</p>
+        <p class="text-emerald-100 text-xs sm:text-sm mt-1">Comunidade Escolar • Escola Laura de Auricélia</p>
       </div>
 
-      <form id="login-form" class="p-6 space-y-4">
+      <!-- onsubmit="return false;" impede reload mesmo em falhas inesperadas -->
+      <form id="login-form" onsubmit="return false;" class="p-5 sm:p-6 space-y-4">
+        <div id="login-error-box" class="hidden p-3 rounded-xl bg-red-50 dark:bg-red-950/60 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-200 text-xs leading-relaxed"></div>
+
+        <div id="session-restore-banner" class="hidden p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-200 text-xs flex items-center gap-2">
+          <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>Restaurando sua sessão anterior...</span>
+        </div>
+
         <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">
+          <label for="input-name" class="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">
             Seu Nome ou Apelido
           </label>
           <input
@@ -125,13 +197,14 @@
             id="input-name"
             required
             maxlength="28"
+            autocomplete="nickname"
             placeholder="Ex: Lucas Silva, Prof. Ana..."
             class="w-full px-4 py-3 rounded-xl bg-gray-100 dark:bg-wa-headerDark border border-transparent focus:border-wa-teal focus:bg-white dark:focus:bg-wa-panelDark outline-none transition text-sm"
           />
         </div>
 
         <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">
+          <label for="input-grade" class="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">
             Turma / Série / Função
           </label>
           <select
@@ -143,95 +216,151 @@
             <option value="3º Ano" selected>3º Ano - Ensino Fundamental</option>
             <option value="4º Ano">4º Ano - Ensino Fundamental</option>
             <option value="5º Ano">5º Ano - Ensino Fundamental</option>
+            <option value="6º Ano">6º Ano - Ensino Fundamental</option>
+            <option value="7º Ano">7º Ano - Ensino Fundamental</option>
+            <option value="8º Ano">8º Ano - Ensino Fundamental</option>
+            <option value="9º Ano">9º Ano - Ensino Fundamental</option>
             <option value="Professor(a)">🍎 Professor(a)</option>
             <option value="Coordenação">🏫 Coordenação / Direção</option>
           </select>
         </div>
 
         <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">
+          <span class="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">
             Escolha seu Avatar e Cor
-          </label>
-          <div class="flex flex-col gap-2.5 bg-gray-50 dark:bg-wa-headerDark p-2.5 rounded-xl">
+          </span>
+          <div class="flex flex-col gap-2.5 bg-gray-50 dark:bg-wa-headerDark p-3 rounded-xl border border-gray-200/70 dark:border-gray-700/60">
             <div id="avatar-emoji-list" class="flex flex-wrap gap-1.5"></div>
-            <div class="w-full h-[1px] bg-gray-300 dark:bg-gray-600"></div>
+            <div class="w-full h-[1px] bg-gray-200 dark:bg-gray-700"></div>
             <div id="avatar-color-list" class="flex flex-wrap gap-2"></div>
           </div>
         </div>
 
         <button
           type="submit"
+          id="login-submit-btn"
           class="w-full py-3.5 bg-wa-teal hover:bg-wa-tealDark active:scale-[0.99] text-white font-semibold rounded-xl shadow-lg shadow-emerald-600/20 transition flex items-center justify-center gap-2 mt-2"
         >
           <span>Entrar no Zap da Laura</span>
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+          </svg>
         </button>
 
         <p class="text-[11px] text-center text-gray-400 dark:text-gray-500 pt-1">
-          Conexão em tempo real • Compartilhe o link com sua turma!
+          Protótipo escolar em tempo real • Não publique dados pessoais sensíveis.
         </p>
       </form>
     </div>
   </div>
 
-  <!-- TELA 2: APLICATIVO PRINCIPAL -->
+  <!-- ===================================================================== -->
+  <!-- TELA 2: APLICATIVO PRINCIPAL                                          -->
+  <!-- ===================================================================== -->
   <div id="app-screen" class="hidden h-full w-full max-w-[1600px] mx-auto flex bg-wa-panelLight dark:bg-wa-panelDark shadow-xl overflow-hidden">
 
     <!-- COLUNA ESQUERDA -->
-    <aside id="sidebar-panel" class="w-full md:w-[360px] lg:w-[400px] flex flex-col border-r border-wa-borderLight dark:border-wa-borderDark bg-wa-panelLight dark:bg-wa-panelDark shrink-0">
+    <aside id="sidebar-panel" class="w-full md:w-[360px] lg:w-[400px] flex flex-col border-r border-wa-borderLight dark:border-wa-borderDark bg-wa-panelLight dark:bg-wa-panelDark shrink-0 h-full">
 
-      <header class="h-16 px-4 bg-wa-headerLight dark:bg-wa-headerDark flex items-center justify-between shrink-0">
-        <div class="flex items-center gap-3 min-w-0">
+      <header class="h-16 px-3 sm:px-4 bg-wa-headerLight dark:bg-wa-headerDark flex items-center justify-between gap-2 shrink-0 border-b border-wa-borderLight dark:border-wa-borderDark">
+        <button type="button" id="btn-edit-profile" title="Editar meu perfil e avatar" class="flex items-center gap-2.5 min-w-0 text-left hover:opacity-85 transition">
           <div id="my-avatar" class="w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold text-white shadow-sm shrink-0">
             🎓
           </div>
           <div class="min-w-0">
-            <h2 id="my-name-display" class="font-semibold text-sm truncate">Carregando...</h2>
+            <div class="flex items-center gap-1.5">
+              <h2 id="my-name-display" class="font-semibold text-sm truncate">Carregando...</h2>
+              <span class="text-[10px] text-gray-400">✎</span>
+            </div>
             <p id="my-grade-display" class="text-xs text-wa-teal dark:text-wa-accent font-medium truncate">Escola Laura de Auricélia</p>
           </div>
-        </div>
+        </button>
 
-        <div class="flex items-center gap-1 text-gray-600 dark:text-gray-300">
-          <button type="button" onclick="shareAppLink()" title="Convidar colegas da escola" class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+        <div class="flex items-center gap-0.5 text-gray-600 dark:text-gray-300 shrink-0">
+          <button type="button" id="btn-sound-toggle" title="Ativar/desativar som" class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition">
+            <svg id="icon-sound-on" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+            </svg>
+            <svg id="icon-sound-off" class="w-4 h-4 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15zm11.414-3l4 4m0-4l-4 4" />
+            </svg>
           </button>
 
-          <button type="button" onclick="openCreateGroupModal()" title="Criar novo grupo escolar" class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+          <button type="button" id="btn-share-link" title="Convidar colegas da escola" class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+            </svg>
           </button>
 
-          <button type="button" onclick="toggleDarkMode()" title="Alternar tema claro/escuro" class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition">
-            <svg id="theme-icon-dark" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-            <svg id="theme-icon-light" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+          <button type="button" id="btn-open-group-modal" title="Criar novo grupo escolar" class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+            </svg>
+          </button>
+
+          <button type="button" id="btn-toggle-dark" title="Alternar tema claro/escuro" class="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition">
+            <svg id="theme-icon-dark" class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+            <svg id="theme-icon-light" class="w-4 h-4 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+            </svg>
+          </button>
+
+          <button type="button" id="btn-logout" title="Sair / Trocar usuário" class="p-2 rounded-full hover:bg-red-500/10 text-red-600 dark:text-red-400 transition">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
           </button>
         </div>
       </header>
 
-      <div class="p-2.5 border-b border-wa-borderLight dark:border-wa-borderDark">
+      <!-- Barra de Pesquisa e Filtros -->
+      <div class="p-2.5 space-y-2 border-b border-wa-borderLight dark:border-wa-borderDark">
         <div class="relative flex items-center">
-          <svg class="w-4 h-4 text-gray-400 absolute left-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <svg class="w-4 h-4 text-gray-400 absolute left-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
           <input
             type="text"
             id="search-input"
             placeholder="Pesquisar conversa, turma ou aluno..."
-            class="w-full pl-10 pr-4 py-2 rounded-xl bg-wa-headerLight dark:bg-wa-headerDark text-sm outline-none placeholder-gray-500"
+            class="w-full pl-10 pr-8 py-2 rounded-xl bg-wa-headerLight dark:bg-wa-headerDark text-sm outline-none placeholder-gray-500"
           />
+          <button type="button" id="btn-clear-search" class="hidden absolute right-2.5 text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 px-1">✕</button>
+        </div>
+
+        <div class="flex items-center justify-between gap-1.5">
+          <div class="flex items-center gap-1.5 text-[11px] font-medium">
+            <button type="button" id="filter-all" class="px-2.5 py-1 rounded-full bg-wa-teal/15 text-wa-teal dark:text-wa-accent transition">Tudo</button>
+            <button type="button" id="filter-online" class="px-2.5 py-1 rounded-full bg-gray-100 dark:bg-wa-headerDark text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-wa-hoverDark transition">Online</button>
+            <button type="button" id="filter-unread" class="px-2.5 py-1 rounded-full bg-gray-100 dark:bg-wa-headerDark text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-wa-hoverDark transition">Não lidas</button>
+          </div>
+
+          <div id="connection-status-pill" class="flex items-center gap-1.5 text-[10px] px-2 py-0.5 rounded-full bg-gray-100 dark:bg-wa-headerDark text-gray-600 dark:text-gray-300 shrink-0">
+            <span id="connection-dot" class="w-2 h-2 rounded-full bg-amber-400"></span>
+            <span id="connection-label">Conectando</span>
+          </div>
         </div>
       </div>
 
-      <div class="flex border-b border-wa-borderLight dark:border-wa-borderDark text-xs font-semibold">
-        <button type="button" id="tab-chats" onclick="switchSidebarTab('chats')" class="flex-1 py-2.5 text-wa-teal dark:text-wa-accent border-b-2 border-wa-teal dark:border-wa-accent transition">
-          Conversas & Grupos
+      <!-- Abas -->
+      <div class="flex border-b border-wa-borderLight dark:border-wa-borderDark text-xs font-semibold shrink-0">
+        <button type="button" id="tab-chats" class="flex-1 py-2.5 text-wa-teal dark:text-wa-accent border-b-2 border-wa-teal dark:border-wa-accent transition flex items-center justify-center gap-1.5">
+          <span>Conversas & Grupos</span>
+          <span id="chats-unread-badge" class="hidden px-1.5 py-0.5 bg-wa-accent text-white rounded-full text-[10px] leading-none">0</span>
         </button>
-        <button type="button" id="tab-users" onclick="switchSidebarTab('users')" class="flex-1 py-2.5 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 border-b-2 border-transparent transition flex items-center justify-center gap-1.5">
+        <button type="button" id="tab-users" class="flex-1 py-2.5 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 border-b-2 border-transparent transition flex items-center justify-center gap-1.5">
           <span>Galera da Escola</span>
-          <span id="online-count-badge" class="px-1.5 py-0.2 bg-wa-accent text-white rounded-full text-[10px]">0</span>
+          <span id="online-count-badge" class="px-1.5 py-0.5 bg-wa-accent text-white rounded-full text-[10px] leading-none">0</span>
         </button>
       </div>
 
+      <!-- Lista Rolável -->
       <div id="sidebar-list" class="flex-1 overflow-y-auto divide-y divide-wa-borderLight/60 dark:divide-wa-borderDark/60"></div>
 
-      <div class="p-2.5 bg-wa-headerLight/60 dark:bg-wa-headerDark/60 text-center border-t border-wa-borderLight dark:border-wa-borderDark">
+      <!-- Rodapé -->
+      <div class="px-3 py-2 bg-wa-headerLight/60 dark:bg-wa-headerDark/60 text-center border-t border-wa-borderLight dark:border-wa-borderDark shrink-0">
         <p class="text-[11px] text-gray-500 dark:text-gray-400">
           🏫 <strong>Zap da Laura</strong> • Escola Laura de Auricélia
         </p>
@@ -239,80 +368,125 @@
     </aside>
 
     <!-- COLUNA DIREITA -->
-    <main id="chat-panel" class="hidden md:flex flex-1 flex-col bg-wa-bgLight dark:bg-wa-bgDark relative">
+    <main id="chat-panel" class="hidden md:flex flex-1 flex-col bg-wa-bgLight dark:bg-wa-bgDark relative h-full min-w-0">
 
-      <div id="empty-chat-state" class="hidden flex-1 flex flex-col items-center justify-center p-8 text-center">
-        <div class="w-24 h-24 rounded-full bg-wa-teal/10 dark:bg-wa-accent/10 flex items-center justify-center text-5xl mb-4">
+      <!-- Estado Vazio -->
+      <div id="empty-chat-state" class="flex-1 flex flex-col items-center justify-center p-8 text-center">
+        <div class="w-24 h-24 rounded-full bg-wa-teal/10 dark:bg-wa-accent/10 flex items-center justify-center text-5xl mb-4 shadow-inner">
           🏫
         </div>
         <h2 class="text-2xl font-light text-gray-700 dark:text-gray-200">Zap da Laura Web</h2>
-        <p class="text-sm text-gray-500 dark:text-gray-400 max-w-md mt-2">
-          Conecte-se com colegas, professores e grupos da <strong>Escola Laura de Auricélia</strong> em tempo real. Escolha uma conversa ao lado para começar!
+        <p class="text-sm text-gray-500 dark:text-gray-400 max-w-md mt-2 leading-relaxed">
+          Conecte-se em tempo real com colegas, professores e grupos da <strong>Escola Laura de Auricélia</strong>. Escolha uma conversa ao lado ou entre direto no Mural Geral!
         </p>
-        <button type="button" onclick="shareAppLink()" class="mt-6 px-5 py-2.5 bg-wa-teal hover:bg-wa-tealDark text-white text-sm font-medium rounded-full shadow transition">
-          Copiar Link para Convidar Colegas
-        </button>
+        <div class="flex flex-wrap items-center justify-center gap-3 mt-6">
+          <button type="button" id="empty-open-mural-btn" class="px-5 py-2.5 bg-wa-teal hover:bg-wa-tealDark text-white text-sm font-medium rounded-full shadow transition">
+            Abrir Mural Geral
+          </button>
+          <button type="button" id="empty-share-btn" class="px-5 py-2.5 bg-white dark:bg-wa-headerDark hover:bg-gray-50 dark:hover:bg-wa-hoverDark text-gray-700 dark:text-gray-200 text-sm font-medium rounded-full shadow border border-gray-200 dark:border-gray-700 transition">
+            Copiar Link do App
+          </button>
+        </div>
       </div>
 
-      <div id="active-chat-container" class="hidden flex-1 flex flex-col h-full">
+      <!-- Conversa Ativa -->
+      <div id="active-chat-container" class="hidden flex-1 flex flex-col h-full min-h-0 relative">
 
-        <header class="h-16 px-3 sm:px-4 bg-wa-headerLight dark:bg-wa-headerDark border-b border-wa-borderLight dark:border-wa-borderDark flex items-center justify-between shrink-0 z-10">
-          <div class="flex items-center gap-3 min-w-0">
-            <button type="button" onclick="closeMobileChat()" class="md:hidden p-1.5 -ml-1 rounded-full hover:bg-black/5 dark:hover:bg-white/10">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        <header class="h-16 px-3 sm:px-4 bg-wa-headerLight dark:bg-wa-headerDark border-b border-wa-borderLight dark:border-wa-borderDark flex items-center justify-between gap-2 shrink-0 z-10">
+          <div class="flex items-center gap-2.5 min-w-0 flex-1">
+            <button type="button" id="btn-mobile-back" title="Voltar para conversas" class="md:hidden p-1.5 -ml-1 rounded-full hover:bg-black/5 dark:hover:bg-white/10 shrink-0">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+              </svg>
             </button>
 
-            <div id="active-chat-avatar" class="w-10 h-10 rounded-full bg-wa-teal text-white flex items-center justify-center text-lg font-bold shrink-0">
-              🏫
-            </div>
-            <div class="min-w-0">
-              <h3 id="active-chat-title" class="font-semibold text-sm sm:text-base truncate">Mural Geral • Laura de Auricélia</h3>
-              <p id="active-chat-subtitle" class="text-xs text-gray-500 dark:text-gray-400 truncate">Chat oficial de todos os alunos e professores da escola</p>
-            </div>
+            <button type="button" id="btn-chat-info" class="flex items-center gap-3 min-w-0 text-left hover:opacity-90 transition">
+              <div id="active-chat-avatar" class="w-10 h-10 rounded-full bg-wa-teal text-white flex items-center justify-center text-lg font-bold shrink-0 shadow-sm">
+                🏫
+              </div>
+              <div class="min-w-0">
+                <h3 id="active-chat-title" class="font-semibold text-sm sm:text-base truncate">Mural Geral • Laura de Auricélia</h3>
+                <p id="active-chat-subtitle" class="text-xs text-gray-500 dark:text-gray-400 truncate">Chat da comunidade escolar</p>
+              </div>
+            </button>
           </div>
 
-          <div class="flex items-center gap-1">
-            <button type="button" onclick="toggleQuickTemplates()" title="Mensagens rápidas da escola" class="px-3 py-1.5 rounded-full bg-wa-teal/10 dark:bg-wa-accent/15 text-wa-teal dark:text-wa-accent text-xs font-semibold hover:bg-wa-teal/20 transition flex items-center gap-1">
+          <div class="flex items-center gap-1.5 shrink-0">
+            <button type="button" id="btn-quick-templates" title="Mensagens rápidas da escola" class="px-3 py-1.5 rounded-full bg-wa-teal/10 dark:bg-wa-accent/15 text-wa-teal dark:text-wa-accent text-xs font-semibold hover:bg-wa-teal/20 transition flex items-center gap-1">
               <span>⚡</span>
               <span class="hidden sm:inline">Avisos Rápidos</span>
             </button>
           </div>
         </header>
 
-        <div id="messages-container" class="flex-1 overflow-y-auto p-3 sm:p-6 space-y-2.5 chat-wallpaper"></div>
+        <div id="messages-container" class="flex-1 overflow-y-auto p-3 sm:px-6 sm:py-4 space-y-1.5 chat-wallpaper"></div>
 
-        <div id="reply-preview-bar" class="hidden px-4 py-2 bg-wa-headerLight dark:bg-wa-headerDark border-t border-wa-borderLight dark:border-wa-borderDark flex items-center justify-between">
-          <div class="border-l-4 border-wa-teal pl-3 py-0.5 min-w-0">
+        <button
+          type="button"
+          id="scroll-bottom-btn"
+          title="Ir para as mensagens mais recentes"
+          class="hidden absolute bottom-24 right-5 z-20 w-10 h-10 rounded-full bg-white dark:bg-wa-headerDark text-gray-700 dark:text-gray-200 shadow-lg border border-gray-200 dark:border-gray-700 flex items-center justify-center hover:scale-105 transition"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+          </svg>
+          <span id="scroll-bottom-badge" class="hidden absolute -top-1.5 -right-1.5 px-1.5 py-0.5 rounded-full bg-wa-accent text-white text-[10px] font-bold leading-none">0</span>
+        </button>
+
+        <!-- Barra de Digitando (Realtime Broadcast) -->
+        <div id="typing-indicator-bar" class="hidden px-4 py-1.5 bg-wa-panelLight/95 dark:bg-wa-panelDark/95 border-t border-wa-borderLight dark:border-wa-borderDark text-xs text-wa-teal dark:text-wa-accent flex items-center gap-2 shrink-0">
+          <span class="flex items-center gap-1">
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+          </span>
+          <span id="typing-indicator-text" class="truncate font-medium">Alguém está digitando...</span>
+        </div>
+
+        <!-- Barra de Resposta -->
+        <div id="reply-preview-bar" class="hidden px-4 py-2 bg-wa-headerLight dark:bg-wa-headerDark border-t border-wa-borderLight dark:border-wa-borderDark flex items-center justify-between gap-3 shrink-0">
+          <div class="border-l-4 border-wa-teal pl-3 py-0.5 min-w-0 flex-1">
             <p id="reply-to-name" class="text-xs font-bold text-wa-teal dark:text-wa-accent truncate">Nome</p>
             <p id="reply-to-text" class="text-xs text-gray-600 dark:text-gray-300 truncate">Mensagem original...</p>
           </div>
-          <button type="button" onclick="cancelReply()" class="p-1.5 text-gray-500 hover:text-gray-700">
+          <button type="button" id="btn-cancel-reply" class="p-1.5 rounded-full hover:bg-black/5 dark:hover:bg-white/10 text-gray-500 hover:text-gray-700 dark:hover:text-gray-200">
             ✕
           </button>
         </div>
 
-        <div id="emoji-picker" class="hidden px-4 py-2.5 bg-wa-panelLight dark:bg-wa-panelDark border-t border-wa-borderLight dark:border-wa-borderDark flex flex-wrap gap-2"></div>
+        <!-- Seletor de Emojis -->
+        <div id="emoji-picker" class="hidden px-3 sm:px-4 py-2.5 bg-wa-panelLight dark:bg-wa-panelDark border-t border-wa-borderLight dark:border-wa-borderDark shrink-0">
+          <div id="emoji-picker-categories" class="flex gap-1.5 pb-2 mb-2 border-b border-gray-200 dark:border-gray-700 text-xs overflow-x-auto"></div>
+          <div id="emoji-picker-grid" class="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto"></div>
+        </div>
 
-        <footer class="p-2.5 sm:px-4 bg-wa-headerLight dark:bg-wa-headerDark flex items-end gap-2 shrink-0">
-          <button type="button" onclick="toggleEmojiPicker()" class="p-2.5 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition shrink-0">
+        <!-- Rodapé de Envio -->
+        <footer class="p-2.5 sm:px-4 bg-wa-headerLight dark:bg-wa-headerDark flex items-end gap-2 shrink-0 border-t border-wa-borderLight dark:border-wa-borderDark">
+          <button type="button" id="btn-emoji-toggle" title="Inserir emoji" class="p-2.5 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition shrink-0">
             <span class="text-xl leading-none">😊</span>
           </button>
 
-          <form id="message-form" class="flex-1 flex items-end gap-2">
-            <textarea
-              id="message-input"
-              rows="1"
-              maxlength="1000"
-              placeholder="Digite uma mensagem para a galera..."
-              class="flex-1 max-h-32 px-4 py-2.5 rounded-2xl bg-white dark:bg-wa-bubbleInDark text-sm outline-none resize-none shadow-sm placeholder-gray-400"
-            ></textarea>
+          <form id="message-form" onsubmit="return false;" class="flex-1 flex items-end gap-2">
+            <div class="flex-1 relative flex items-end">
+              <textarea
+                id="message-input"
+                rows="1"
+                maxlength="1000"
+                placeholder="Digite uma mensagem para a galera..."
+                class="w-full max-h-32 px-4 py-2.5 rounded-2xl bg-white dark:bg-wa-bubbleInDark text-sm outline-none resize-none shadow-sm placeholder-gray-400"
+              ></textarea>
+              <span id="char-counter" class="hidden absolute right-3 bottom-1.5 text-[10px] text-gray-400 pointer-events-none">0/1000</span>
+            </div>
 
             <button
               type="submit"
               id="send-btn"
+              title="Enviar mensagem"
               class="p-3 rounded-full bg-wa-teal hover:bg-wa-tealDark active:scale-95 text-white shadow-md transition shrink-0 flex items-center justify-center"
             >
-              <svg class="w-5 h-5 translate-x-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+              <svg class="w-5 h-5 translate-x-0.5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+              </svg>
             </button>
           </form>
         </footer>
@@ -320,1154 +494,1850 @@
     </main>
   </div>
 
+  <!-- ===================================================================== -->
+  <!-- MODAIS                                                                -->
+  <!-- ===================================================================== -->
+
   <!-- MODAL: CRIAR NOVO GRUPO -->
-  <div id="create-group-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+  <div id="create-group-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white dark:bg-wa-panelDark w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-pop">
       <div class="bg-wa-teal px-5 py-4 text-white flex items-center justify-between">
         <h3 class="font-bold text-base">Criar Novo Grupo Escolar</h3>
-        <button type="button" onclick="closeCreateGroupModal()" class="text-white/80 hover:text-white text-lg">✕</button>
+        <button type="button" id="btn-close-group-modal" class="text-white/80 hover:text-white text-lg leading-none">✕</button>
       </div>
-      <form id="create-group-form" class="p-5 space-y-4">
+      <form id="create-group-form" onsubmit="return false;" class="p-5 space-y-4">
         <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Nome do Grupo</label>
+          <label for="group-name-input" class="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Nome do Grupo</label>
           <input type="text" id="group-name-input" required maxlength="35" placeholder="Ex: Trabalho de Ciências, Interclasse..." class="w-full px-3.5 py-2.5 rounded-xl bg-gray-100 dark:bg-wa-headerDark text-sm outline-none focus:ring-2 focus:ring-wa-teal" />
         </div>
         <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Descrição / Assunto</label>
+          <label for="group-desc-input" class="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Descrição / Assunto</label>
           <input type="text" id="group-desc-input" maxlength="60" placeholder="Para combinar a apresentação de sexta" class="w-full px-3.5 py-2.5 rounded-xl bg-gray-100 dark:bg-wa-headerDark text-sm outline-none focus:ring-2 focus:ring-wa-teal" />
         </div>
         <div>
-          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Ícone do Grupo</label>
+          <span class="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1.5">Ícone do Grupo</span>
           <div id="group-icon-options" class="flex gap-2 flex-wrap"></div>
         </div>
         <div class="flex justify-end gap-2 pt-2">
-          <button type="button" onclick="closeCreateGroupModal()" class="px-4 py-2 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10">Cancelar</button>
+          <button type="button" id="btn-cancel-group-modal" class="px-4 py-2 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10">Cancelar</button>
           <button type="submit" class="px-5 py-2 rounded-xl text-sm font-semibold bg-wa-teal hover:bg-wa-tealDark text-white shadow">Criar Grupo</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- MODAL: AVISO RÁPIDO ESCOLAR -->
-  <div id="quick-templates-modal" class="hidden fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
+  <!-- MODAL: AVISOS RÁPIDOS ESCOLARES -->
+  <div id="quick-templates-modal" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white dark:bg-wa-panelDark w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-pop">
       <div class="bg-wa-teal px-5 py-3.5 text-white flex items-center justify-between">
         <h3 class="font-bold text-sm">⚡ Mensagens Rápidas • Escola Laura de Auricélia</h3>
-        <button type="button" onclick="toggleQuickTemplates()" class="text-white/80 hover:text-white">✕</button>
+        <button type="button" id="btn-close-templates-modal" class="text-white/80 hover:text-white">✕</button>
       </div>
-      <div class="p-4 space-y-2">
-        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Escolha um modelo pronto ou um recado importante:</p>
-        <button type="button" onclick="insertTemplate('📚 Lembrete de Tarefa: Não esqueçam de entregar a atividade na próxima aula!')" class="w-full text-left p-3 rounded-xl bg-gray-50 dark:bg-wa-headerDark hover:bg-emerald-50 dark:hover:bg-wa-hoverDark text-xs transition border border-gray-200 dark:border-gray-700">
-          📚 <strong>Lembrete de Tarefa:</strong> Não esqueçam de entregar a atividade na próxima aula!
-        </button>
-        <button type="button" onclick="insertTemplate('📢 Atenção Prova: Pessoal, vamos revisar o conteúdo hoje mais tarde?')" class="w-full text-left p-3 rounded-xl bg-gray-50 dark:bg-wa-headerDark hover:bg-emerald-50 dark:hover:bg-wa-hoverDark text-xs transition border border-gray-200 dark:border-gray-700">
-          📢 <strong>Atenção Prova:</strong> Pessoal, vamos revisar o conteúdo hoje mais tarde?
-        </button>
-        <button type="button" onclick="insertTemplate('⚽ Interclasse / Educação Física: Quem vai jogar hoje na quadra?')" class="w-full text-left p-3 rounded-xl bg-gray-50 dark:bg-wa-headerDark hover:bg-emerald-50 dark:hover:bg-wa-hoverDark text-xs transition border border-gray-200 dark:border-gray-700">
-          ⚽ <strong>Interclasse / Educação Física:</strong> Quem vai jogar hoje na quadra?
+      <div id="quick-templates-list" class="p-4 space-y-2 max-h-[70vh] overflow-y-auto"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: EDITAR MEU PERFIL -->
+  <div id="edit-profile-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-wa-panelDark w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-pop">
+      <div class="bg-wa-teal px-5 py-4 text-white flex items-center justify-between">
+        <h3 class="font-bold text-base">Editar Meu Perfil</h3>
+        <button type="button" id="btn-close-profile-modal" class="text-white/80 hover:text-white text-lg leading-none">✕</button>
+      </div>
+      <form id="edit-profile-form" onsubmit="return false;" class="p-5 space-y-4">
+        <div>
+          <label for="edit-input-name" class="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Nome ou Apelido</label>
+          <input type="text" id="edit-input-name" required maxlength="28" class="w-full px-3.5 py-2.5 rounded-xl bg-gray-100 dark:bg-wa-headerDark text-sm outline-none focus:ring-2 focus:ring-wa-teal" />
+        </div>
+        <div>
+          <label for="edit-input-grade" class="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">Turma / Função</label>
+          <select id="edit-input-grade" class="w-full px-3.5 py-2.5 rounded-xl bg-gray-100 dark:bg-wa-headerDark text-sm outline-none focus:ring-2 focus:ring-wa-teal">
+            <option value="1º Ano">1º Ano - Ensino Fundamental</option>
+            <option value="2º Ano">2º Ano - Ensino Fundamental</option>
+            <option value="3º Ano">3º Ano - Ensino Fundamental</option>
+            <option value="4º Ano">4º Ano - Ensino Fundamental</option>
+            <option value="5º Ano">5º Ano - Ensino Fundamental</option>
+            <option value="6º Ano">6º Ano - Ensino Fundamental</option>
+            <option value="7º Ano">7º Ano - Ensino Fundamental</option>
+            <option value="8º Ano">8º Ano - Ensino Fundamental</option>
+            <option value="9º Ano">9º Ano - Ensino Fundamental</option>
+            <option value="Professor(a)">🍎 Professor(a)</option>
+            <option value="Coordenação">🏫 Coordenação / Direção</option>
+          </select>
+        </div>
+        <div>
+          <span class="block text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1.5">Avatar e Cor</span>
+          <div class="flex flex-col gap-2 bg-gray-50 dark:bg-wa-headerDark p-2.5 rounded-xl">
+            <div id="edit-emoji-list" class="flex flex-wrap gap-1.5"></div>
+            <div class="w-full h-[1px] bg-gray-200 dark:bg-gray-700"></div>
+            <div id="edit-color-list" class="flex flex-wrap gap-2"></div>
+          </div>
+        </div>
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" id="btn-cancel-profile-modal" class="px-4 py-2 rounded-xl text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10">Cancelar</button>
+          <button type="submit" class="px-5 py-2 rounded-xl text-sm font-semibold bg-wa-teal hover:bg-wa-tealDark text-white shadow">Salvar Alterações</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: INFORMAÇÕES DO CHAT -->
+  <div id="chat-info-modal" class="hidden fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-wa-panelDark w-full max-w-sm rounded-2xl shadow-2xl overflow-hidden animate-pop">
+      <div class="bg-wa-teal px-5 py-4 text-white flex items-center justify-between">
+        <h3 class="font-bold text-sm">Detalhes da Conversa</h3>
+        <button type="button" id="btn-close-info-modal" class="text-white/80 hover:text-white">✕</button>
+      </div>
+      <div class="p-5 text-center space-y-3">
+        <div id="info-avatar" class="w-16 h-16 rounded-full mx-auto flex items-center justify-center text-3xl text-white shadow-md">🏫</div>
+        <div>
+          <h4 id="info-title" class="font-bold text-base">Título</h4>
+          <p id="info-subtitle" class="text-xs text-gray-500 dark:text-gray-400 mt-1">Descrição</p>
+        </div>
+        <div id="info-meta-details" class="text-xs text-left bg-gray-50 dark:bg-wa-headerDark p-3 rounded-xl space-y-1.5 border border-gray-200/70 dark:border-gray-700/70"></div>
+        <button type="button" id="info-share-btn" class="w-full py-2.5 rounded-xl bg-wa-teal hover:bg-wa-tealDark text-white text-xs font-semibold shadow transition">
+          Compartilhar Link do Zap da Laura
         </button>
       </div>
     </div>
   </div>
 
-  <!-- TOAST DE NOTIFICAÇÃO -->
-  <div id="toast" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-full bg-gray-900/90 text-white text-xs font-medium shadow-lg opacity-0 pointer-events-none transition-opacity duration-300">
-    Link copiado!
+  <!-- TOAST -->
+  <div id="toast" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-[60] px-4 py-2.5 rounded-full bg-gray-900/90 text-white text-xs font-medium shadow-lg opacity-0 pointer-events-none transition-opacity duration-300 text-center max-w-[90vw]">
+    Pronto!
   </div>
 
-  <!-- SUPABASE & LÓGICA EM TEMPO REAL -->
-  <script type="module">
-    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+  <!-- ===================================================================== -->
+  <!-- LÓGICA PRINCIPAL EM ESCOPO ISOLADO (UMD SUPABASE + REALTIME)          -->
+  <!-- ===================================================================== -->
+  <script>
+    (function () {
+      'use strict';
 
-    const SUPABASE_URL = 'https://wxrvgocaqtatrjtyittz.supabase.co';
-    const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_gLPYsCSpMwdz4LjxCidalg_QRcUbBK-';
-    const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
-      auth: {
-        persistSession: true,
-        autoRefreshToken: true,
-        detectSessionInUrl: true
+      // -------------------------------------------------------------------
+      // 1. Configuração e Constantes
+      // -------------------------------------------------------------------
+      const SUPABASE_URL = 'https://wxrvgocaqtatrjtyittz.supabase.co';
+      const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_gLPYsCSpMwdz4LjxCidalg_QRcUbBK-';
+
+      const MAX_MESSAGE_LENGTH = 1000;
+      const PROFILE_STORAGE_KEY = 'zap_laura_profile_v3';
+      const DARK_MODE_STORAGE_KEY = 'zap_laura_dark_mode';
+      const SOUND_STORAGE_KEY = 'zap_laura_sound_enabled';
+
+      const EMOJIS = ['🎓', '😎', '🤓', '🦁', '🦊', '🚀', '⚽', '🎨', '📚', '🎧', '🌟', '🐱'];
+      const COLORS = ['#008069', '#0284c7', '#7c3aed', '#db2777', '#ea580c', '#16a34a', '#4f46e5', '#be123c'];
+      const GROUP_ICONS = ['📚', '⚽', '🎨', '🔬', '🎭', '🚌', '📢', '🎉'];
+
+      const EMOJI_GROUPS = [
+        { label: 'Carinhas', items: ['😀', '😂', '🥰', '😎', '🤔', '🥳', '😭', '🙏', '👏', '🙌', '👍', '❤️', '🔥', '💯'] },
+        { label: 'Escola', items: ['📚', '✏️', '📝', '🎒', '🎓', '🏫', '🔬', '📐', '💻', '🎨', '🎭', '⚽', '🏆', '🚌'] },
+        { label: 'Avisos', items: ['📢', '⚡', '✅', '⚠️', '📅', '🕒', '🎉', '🚀', '💡', '🌟'] },
+      ];
+
+      const QUICK_TEMPLATES = [
+        { icon: '📚', title: 'Lembrete de Tarefa', text: '📚 Lembrete de Tarefa: Pessoal, não esqueçam de entregar a atividade na próxima aula!' },
+        { icon: '📢', title: 'Revisão de Prova', text: '📢 Atenção Prova: Alguém quer revisar a matéria de hoje mais tarde?' },
+        { icon: '📝', title: 'Trabalho em Grupo', text: '📝 Trabalho em Grupo: Que horas vamos combinar as partes da apresentação?' },
+        { icon: '⚽', title: 'Pátio & Interclasse', text: '⚽ Interclasse / Educação Física: Quem vai jogar hoje na quadra?' },
+        { icon: '🏫', title: 'Recado Importante', text: '🏫 Recado Escolar: Fiquem atentos aos horários desta semana!' },
+        { icon: '❓', title: 'Dúvida na Matéria', text: '❓ Dúvida: Alguém conseguiu fazer a questão da folha de exercícios?' },
+      ];
+
+      // -------------------------------------------------------------------
+      // 2. Estado da Aplicação
+      // -------------------------------------------------------------------
+      let sb = null;
+      let currentUser = null;
+      let currentUserProfile = null;
+      let currentChat = null;
+      let activeSidebarTab = 'chats';
+      let activeFilter = 'all';
+      let replyToMessage = null;
+      let selectedEmoji = '🎓';
+      let selectedColor = '#008069';
+      let editSelectedEmoji = '🎓';
+      let editSelectedColor = '#008069';
+      let selectedGroupIcon = '📚';
+      let activeEmojiTab = 0;
+
+      let allProfiles = [];
+      let onlineUserIds = new Set();
+      let groupsList = [];
+      let dmMetaByPeerId = new Map();
+      let groupUnreadById = new Map();
+      let currentMessages = [];
+
+      let messageSubscription = null;
+      let profileSubscription = null;
+      let groupSubscription = null;
+      let dmSubscription = null;
+      let presenceChannel = null;
+      let authSubscription = null;
+
+      let typingPeers = new Map();
+      let lastTypingBroadcastAt = 0;
+
+      let chatLoadToken = 0;
+      let toastTimer = null;
+      let soundEnabled = true;
+      let audioCtx = null;
+      let pendingNewWhileScrolled = 0;
+
+      const byId = (id) => document.getElementById(id);
+
+      // -------------------------------------------------------------------
+      // 3. Utilitários de Storage, DOM Seguro, Áudio e Datas
+      // -------------------------------------------------------------------
+      function safeStorageGet(key) {
+        try { return localStorage.getItem(key); } catch { return null; }
       }
-    });
 
-    const MAX_MESSAGE_LENGTH = 1000;
-    const PROFILE_STORAGE_KEY = 'zap_laura_profile_v2';
-    const DARK_MODE_STORAGE_KEY = 'zap_laura_dark_mode';
-
-    let currentUser = null;
-    let currentUserProfile = null;
-    let currentChat = null;
-    let activeSidebarTab = 'chats';
-    let replyToMessage = null;
-    let selectedEmoji = '🎓';
-    let selectedColor = '#008069';
-    let selectedGroupIcon = '📚';
-    let allProfiles = [];
-    let onlineUserIds = new Set();
-    let groupsList = [];
-    let dmMetaByPeerId = new Map(); // { lastMessage, lastTime, unreadCount }
-    let currentMessages = [];
-    let messageSubscription = null;
-    let profileSubscription = null;
-    let groupSubscription = null;
-    let dmSubscription = null;
-    let presenceChannel = null;
-    let authListenerAttached = false;
-    let chatLoadToken = 0;
-    let toastTimer = null;
-
-    const EMOJIS = ['🎓', '😎', '🤓', '🦁', '🦊', '🚀', '⚽', '🎨', '📚', '🎧', '🌟', '🐱'];
-    const COLORS = ['#008069', '#0284c7', '#7c3aed', '#db2777', '#ea580c', '#16a34a', '#4f46e5', '#be123c'];
-    const GROUP_ICONS = ['📚', '⚽', '🎨', '🔬', '🎭', '🚌', '📢', '🎉'];
-    const CHAT_EMOJIS = ['😀', '😂', '🥰', '😎', '🤔', '👏', '🙌', '🔥', '❤️', '👍', '📚', '✏️', '🎓', '🏫', '⚽', '🎉', '🙏', '💯'];
-
-    const byId = (id) => document.getElementById(id);
-
-    function safeStorageGet(key) {
-      try {
-        return localStorage.getItem(key);
-      } catch {
-        return null;
+      function safeStorageSet(key, value) {
+        try { localStorage.setItem(key, value); } catch {}
       }
-    }
 
-    function safeStorageSet(key, value) {
-      try {
-        localStorage.setItem(key, value);
-      } catch {}
-    }
-
-    function safeStorageRemove(key) {
-      try {
-        localStorage.removeItem(key);
-      } catch {}
-    }
-
-    function makeElement(tag, className = '', text = '') {
-      const element = document.createElement(tag);
-      if (className) element.className = className;
-      if (text !== '') element.textContent = text;
-      return element;
-    }
-
-    function safeColor(value, fallback = '#008069') {
-      return typeof value === 'string' && /^#[0-9a-fA-F]{6}$/.test(value) ? value : fallback;
-    }
-
-    function showToast(message, isError = false) {
-      const toast = byId('toast');
-      if (!toast) return;
-      toast.textContent = message;
-      toast.classList.toggle('bg-red-700/95', isError);
-      toast.classList.toggle('bg-gray-900/90', !isError);
-      toast.classList.remove('opacity-0');
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => toast.classList.add('opacity-0'), 3200);
-    }
-
-    function formatTime(timestamp) {
-      if (!timestamp) return '';
-      const date = new Date(timestamp);
-      if (Number.isNaN(date.getTime())) return '';
-      return date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-    }
-
-    function getPrivateChatId(uid1, uid2) {
-      return [uid1, uid2].sort().join('__');
-    }
-
-    function generateGroupId() {
-      if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
-        return `grp_${crypto.randomUUID()}`;
+      function safeStorageRemove(key) {
+        try { localStorage.removeItem(key); } catch {}
       }
-      const hex = '0123456789abcdef';
-      let uuid = '';
-      for (let i = 0; i < 36; i++) {
-        if (i === 8 || i === 13 || i === 18 || i === 23) {
-          uuid += '-';
-        } else if (i === 14) {
-          uuid += '4';
-        } else if (i === 19) {
-          uuid += hex[(Math.floor(Math.random() * 4)) + 8];
+
+      function makeEl(tag, className = '', text = '') {
+        const el = document.createElement(tag);
+        if (className) el.className = className;
+        if (text !== '') el.textContent = text;
+        return el;
+      }
+
+      function safeColor(value, fallback = '#008069') {
+        return typeof value === 'string' && /^#[0-9a-fA-F]{6}$/.test(value) ? value : fallback;
+      }
+
+      async function copyTextSafe(text) {
+        if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+          await navigator.clipboard.writeText(text);
+          return true;
+        }
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        const ok = document.execCommand('copy');
+        ta.remove();
+        return ok;
+      }
+
+      function showToast(message, isError = false) {
+        const toast = byId('toast');
+        if (!toast) return;
+        toast.textContent = message;
+        toast.classList.remove('bg-red-700/95', 'bg-gray-900/90');
+        toast.classList.add(isError ? 'bg-red-700/95' : 'bg-gray-900/90');
+        toast.classList.remove('opacity-0');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.add('opacity-0'), 3500);
+      }
+
+      function setConnectionStatus(state) {
+        const dot = byId('connection-dot');
+        const label = byId('connection-label');
+        if (!dot || !label) return;
+        dot.classList.remove('bg-emerald-500', 'bg-amber-400', 'bg-red-500');
+        if (state === 'online') {
+          dot.classList.add('bg-emerald-500');
+          label.textContent = 'Ao vivo';
+        } else if (state === 'offline') {
+          dot.classList.add('bg-red-500');
+          label.textContent = 'Offline';
         } else {
-          uuid += hex[Math.floor(Math.random() * 16)];
+          dot.classList.add('bg-amber-400');
+          label.textContent = 'Conectando';
         }
       }
-      return `grp_${uuid}`;
-    }
 
-    function isOnline(uid) {
-      return onlineUserIds.has(uid);
-    }
-
-    function setButtonBusy(button, busy, busyText = 'Aguarde...') {
-      if (!button) return;
-      if (busy) {
-        button.dataset.originalHtml = button.innerHTML;
-        button.disabled = true;
-        button.classList.add('opacity-60', 'cursor-wait');
-        button.textContent = busyText;
-      } else {
-        button.disabled = false;
-        button.classList.remove('opacity-60', 'cursor-wait');
-        if (button.dataset.originalHtml !== undefined) button.innerHTML = button.dataset.originalHtml;
-        delete button.dataset.originalHtml;
+      function playPopSound() {
+        if (!soundEnabled) return;
+        try {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (!AudioContextClass) return;
+          if (!audioCtx) audioCtx = new AudioContextClass();
+          if (audioCtx.state === 'suspended') audioCtx.resume();
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(580, audioCtx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(840, audioCtx.currentTime + 0.08);
+          gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.11);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.12);
+        } catch {}
       }
-    }
 
-    function resetToLogin(message = '') {
-      currentUser = null;
-      currentUserProfile = null;
-      currentChat = null;
-      currentMessages = [];
-      dmMetaByPeerId.clear();
-      byId('app-screen')?.classList.add('hidden');
-      byId('login-screen')?.classList.remove('hidden');
-      if (message) showToast(message, true);
-    }
+      function formatTime(timestamp) {
+        if (!timestamp) return '';
+        const date = new Date(timestamp);
+        if (Number.isNaN(date.getTime())) return '';
+        return date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+      }
 
-    function attachAuthListener() {
-      if (authListenerAttached) return;
-      authListenerAttached = true;
-      supabase.auth.onAuthStateChange((event, session) => {
-        if (event === 'SIGNED_OUT' || (!session && currentUser)) {
-          resetToLogin('Sua sessão expirou. Entre novamente para continuar.');
+      function getDateGroupKey(timestamp) {
+        const date = new Date(timestamp);
+        if (Number.isNaN(date.getTime())) return 'Sem data';
+        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+      }
+
+      function formatDateDivider(timestamp) {
+        const date = new Date(timestamp);
+        if (Number.isNaN(date.getTime())) return '';
+        const today = new Date();
+        const yesterday = new Date();
+        yesterday.setDate(today.getDate() - 1);
+
+        if (getDateGroupKey(date) === getDateGroupKey(today)) return 'Hoje';
+        if (getDateGroupKey(date) === getDateGroupKey(yesterday)) return 'Ontem';
+        return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      }
+
+      function getPrivateChatId(uid1, uid2) {
+        return [uid1, uid2].sort().join('__');
+      }
+
+      function generateGroupId() {
+        if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+          return `grp_${crypto.randomUUID()}`;
         }
-      });
-    }
-
-    async function ensureAuthSession() {
-      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
-      if (sessionError) throw sessionError;
-      if (sessionData.session?.user) return sessionData.session.user;
-
-      const { data, error } = await supabase.auth.signInAnonymously();
-      if (error) throw error;
-      if (!data.user) throw new Error('Não foi possível iniciar a sessão.');
-      return data.user;
-    }
-
-    function autoResizeMessageInput() {
-      const input = byId('message-input');
-      if (!input) return;
-      input.style.height = 'auto';
-      input.style.height = `${Math.min(input.scrollHeight, 128)}px`;
-    }
-
-    function initLoginUI() {
-      try {
-        const saved = JSON.parse(safeStorageGet(PROFILE_STORAGE_KEY) || '{}');
-        if (saved.name) byId('input-name').value = saved.name;
-        if (saved.grade) byId('input-grade').value = saved.grade;
-        if (saved.avatar_emoji && EMOJIS.includes(saved.avatar_emoji)) selectedEmoji = saved.avatar_emoji;
-        if (saved.avatar_color && COLORS.includes(saved.avatar_color)) selectedColor = saved.avatar_color;
-      } catch {
-        safeStorageRemove(PROFILE_STORAGE_KEY);
+        return `grp_${Date.now()}_${Math.random().toString(16).slice(2, 10)}`;
       }
 
-      const emojiContainer = byId('avatar-emoji-list');
-      const colorContainer = byId('avatar-color-list');
-      const groupIconContainer = byId('group-icon-options');
-      const chatEmojiPicker = byId('emoji-picker');
+      function isOnline(uid) {
+        return onlineUserIds.has(uid);
+      }
 
-      emojiContainer?.replaceChildren();
-      colorContainer?.replaceChildren();
-      groupIconContainer?.replaceChildren();
-      chatEmojiPicker?.replaceChildren();
+      function setButtonBusy(button, busy, busyText = 'Aguarde...') {
+        if (!button) return;
+        if (busy) {
+          button.dataset.originalHtml = button.innerHTML;
+          button.disabled = true;
+          button.classList.add('opacity-60', 'cursor-wait');
+          button.textContent = busyText;
+        } else {
+          button.disabled = false;
+          button.classList.remove('opacity-60', 'cursor-wait');
+          if (button.dataset.originalHtml !== undefined) {
+            button.innerHTML = button.dataset.originalHtml;
+          }
+          delete button.dataset.originalHtml;
+        }
+      }
 
-      EMOJIS.forEach((emoji) => {
-        const button = makeElement('button', 'w-8 h-8 rounded-lg flex items-center justify-center text-base transition', emoji);
-        button.type = 'button';
-        const updateStyle = () => {
-          button.className = `w-8 h-8 rounded-lg flex items-center justify-center text-base transition ${emoji === selectedEmoji ? 'bg-wa-teal/20 ring-2 ring-wa-teal scale-110' : 'hover:bg-gray-200 dark:hover:bg-gray-700'}`;
-        };
-        button.addEventListener('click', () => {
-          selectedEmoji = emoji;
-          [...emojiContainer.children].forEach((child) => {
-            child.className = 'w-8 h-8 rounded-lg flex items-center justify-center text-base transition hover:bg-gray-200 dark:hover:bg-gray-700';
+      function showLoginError(message) {
+        const box = byId('login-error-box');
+        if (!box) return;
+        if (!message) {
+          box.classList.add('hidden');
+          box.textContent = '';
+          return;
+        }
+        box.textContent = message;
+        box.classList.remove('hidden');
+      }
+
+      function explainSupabaseError(error) {
+        const raw = String(error?.message || error || 'Erro desconhecido');
+        const lower = raw.toLowerCase();
+        if (lower.includes('anonymous') && lower.includes('disabled')) {
+          return 'O login anônimo está desativado no seu Supabase. No painel do projeto, abra Authentication → Settings e ative "Anonymous Sign-Ins".';
+        }
+        if (lower.includes('relation') && lower.includes('does not exist')) {
+          return 'As tabelas do Zap da Laura ainda não foram criadas no banco. Execute o arquivo supabase_setup.sql no SQL Editor do Supabase.';
+        }
+        if (lower.includes('failed to fetch') || lower.includes('network')) {
+          return 'Sem conexão com o servidor do Supabase. Verifique sua internet ou se o navegador está bloqueando o acesso.';
+        }
+        return `Não foi possível entrar: ${raw}`;
+      }
+
+      function autoResizeMessageInput() {
+        const input = byId('message-input');
+        const counter = byId('char-counter');
+        if (!input) return;
+        input.style.height = 'auto';
+        input.style.height = `${Math.min(input.scrollHeight, 128)}px`;
+        if (counter) {
+          const len = input.value.length;
+          counter.textContent = `${len}/${MAX_MESSAGE_LENGTH}`;
+          counter.classList.toggle('hidden', len < 700);
+          counter.classList.toggle('text-red-500', len >= MAX_MESSAGE_LENGTH);
+        }
+      }
+
+      // -------------------------------------------------------------------
+      // 4. Cliente Supabase, Sessão e Token Realtime
+      // -------------------------------------------------------------------
+      function initSupabaseClient() {
+        if (!window.supabase || typeof window.supabase.createClient !== 'function') {
+          showLoginError('Não foi possível carregar a biblioteca do Supabase. Verifique sua conexão e recarregue a página.');
+          return false;
+        }
+        sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+          auth: {
+            persistSession: true,
+            autoRefreshToken: true,
+            detectSessionInUrl: false,
+          },
+        });
+        return true;
+      }
+
+      function syncRealtimeAuth(session) {
+        if (!sb || !session?.access_token) return;
+        try {
+          if (sb.realtime && typeof sb.realtime.setAuth === 'function') {
+            sb.realtime.setAuth(session.access_token);
+          }
+        } catch (err) {
+          console.warn('Falha ao sincronizar token Realtime:', err);
+        }
+      }
+
+      function attachAuthListener() {
+        if (!sb || authSubscription) return;
+        const { data } = sb.auth.onAuthStateChange((event, session) => {
+          if (session?.access_token) {
+            syncRealtimeAuth(session);
+          }
+          if (event === 'SIGNED_OUT' || (!session && currentUser)) {
+            resetToLogin('Sessão encerrada. Entre novamente para continuar.');
+          }
+        });
+        authSubscription = data?.subscription || true;
+      }
+
+      async function ensureAuthSession() {
+        const { data: sessionData, error: sessionError } = await sb.auth.getSession();
+        if (sessionError) throw sessionError;
+        if (sessionData.session?.user) {
+          syncRealtimeAuth(sessionData.session);
+          return sessionData.session.user;
+        }
+
+        const { data, error } = await sb.auth.signInAnonymously();
+        if (error) throw error;
+        if (!data.user) throw new Error('Não foi possível criar uma sessão de acesso.');
+        if (data.session) syncRealtimeAuth(data.session);
+        return data.user;
+      }
+
+      async function teardownChannels() {
+        const channels = [messageSubscription, profileSubscription, groupSubscription, dmSubscription, presenceChannel];
+        messageSubscription = null;
+        profileSubscription = null;
+        groupSubscription = null;
+        dmSubscription = null;
+        presenceChannel = null;
+        if (!sb) return;
+        await Promise.allSettled(channels.filter(Boolean).map((ch) => sb.removeChannel(ch)));
+      }
+
+      async function resetToLogin(message = '', isError = false) {
+        const wasLoggedIn = Boolean(currentUser);
+        currentUser = null;
+        currentUserProfile = null;
+        currentChat = null;
+        currentMessages = [];
+        allProfiles = [];
+        groupsList = [];
+        onlineUserIds.clear();
+        dmMetaByPeerId.clear();
+        groupUnreadById.clear();
+        clearAllTypingPeers();
+        await teardownChannels();
+        byId('app-screen')?.classList.add('hidden');
+        byId('login-screen')?.classList.remove('hidden');
+        if (message && wasLoggedIn) showToast(message, isError);
+      }
+
+      // -------------------------------------------------------------------
+      // 5. Inicialização de UI e Pickers
+      // -------------------------------------------------------------------
+      function refreshOptionButtons(container, activeValue, isColor) {
+        if (!container) return;
+        [...container.children].forEach((btn) => {
+          const active = btn.dataset.val === activeValue;
+          if (isColor) {
+            btn.className = `w-7 h-7 rounded-full transition ${active ? 'ring-2 ring-offset-2 ring-gray-800 dark:ring-white scale-110' : 'opacity-75 hover:opacity-100'}`;
+          } else {
+            btn.className = `w-8 h-8 rounded-lg flex items-center justify-center text-base transition ${active ? 'bg-wa-teal/20 ring-2 ring-wa-teal scale-110' : 'hover:bg-gray-200 dark:hover:bg-gray-700'}`;
+          }
+        });
+      }
+
+      function renderOptionButtons(container, items, getSelected, onSelect, isColor = false) {
+        if (!container) return;
+        container.replaceChildren();
+        items.forEach((item) => {
+          const btn = makeEl('button', isColor
+            ? 'w-7 h-7 rounded-full transition'
+            : 'w-8 h-8 rounded-lg flex items-center justify-center text-base transition'
+          );
+          btn.type = 'button';
+          if (isColor) {
+            btn.style.backgroundColor = item;
+          } else {
+            btn.textContent = item;
+          }
+          btn.dataset.val = item;
+          btn.addEventListener('click', () => {
+            onSelect(item);
+            refreshOptionButtons(container, getSelected(), isColor);
           });
-          updateStyle();
+          container.appendChild(btn);
         });
-        updateStyle();
-        emojiContainer?.appendChild(button);
-      });
+        refreshOptionButtons(container, getSelected(), isColor);
+      }
 
-      COLORS.forEach((color) => {
-        const button = makeElement('button', 'w-6 h-6 rounded-full transition');
-        button.type = 'button';
-        button.style.backgroundColor = color;
-        const updateStyle = () => {
-          button.className = `w-6 h-6 rounded-full transition ${color === selectedColor ? 'ring-2 ring-offset-2 ring-gray-800 dark:ring-white scale-110' : 'opacity-80 hover:opacity-100'}`;
-        };
-        button.addEventListener('click', () => {
-          selectedColor = color;
-          [...colorContainer.children].forEach((child) => {
-            child.className = 'w-6 h-6 rounded-full transition opacity-80 hover:opacity-100';
+      function renderEmojiPicker() {
+        const tabsEl = byId('emoji-picker-categories');
+        const gridEl = byId('emoji-picker-grid');
+        if (!tabsEl || !gridEl) return;
+
+        tabsEl.replaceChildren();
+        EMOJI_GROUPS.forEach((grp, idx) => {
+          const tabBtn = makeEl('button', `px-2.5 py-1 rounded-full font-medium shrink-0 transition ${idx === activeEmojiTab ? 'bg-wa-teal text-white' : 'bg-gray-100 dark:bg-wa-headerDark text-gray-600 dark:text-gray-300'}`, grp.label);
+          tabBtn.type = 'button';
+          tabBtn.addEventListener('click', () => {
+            activeEmojiTab = idx;
+            renderEmojiPicker();
           });
-          updateStyle();
+          tabsEl.appendChild(tabBtn);
         });
-        updateStyle();
-        colorContainer?.appendChild(button);
-      });
 
-      GROUP_ICONS.forEach((icon) => {
-        const button = makeElement('button', 'w-9 h-9 rounded-xl flex items-center justify-center text-lg border transition', icon);
-        button.type = 'button';
-        const updateStyle = () => {
-          button.className = `w-9 h-9 rounded-xl flex items-center justify-center text-lg border transition ${icon === selectedGroupIcon ? 'border-wa-teal bg-wa-teal/10' : 'border-gray-200 dark:border-gray-700'}`;
-        };
-        button.addEventListener('click', () => {
-          selectedGroupIcon = icon;
-          [...groupIconContainer.children].forEach((child) => {
-            child.className = 'w-9 h-9 rounded-xl flex items-center justify-center text-lg border transition border-gray-200 dark:border-gray-700';
+        gridEl.replaceChildren();
+        EMOJI_GROUPS[activeEmojiTab].items.forEach((emoji) => {
+          const btn = makeEl('button', 'text-xl hover:scale-125 transition p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-wa-hoverDark', emoji);
+          btn.type = 'button';
+          btn.addEventListener('click', () => {
+            const input = byId('message-input');
+            if (!input) return;
+            input.value += emoji;
+            autoResizeMessageInput();
+            input.focus();
           });
-          updateStyle();
+          gridEl.appendChild(btn);
         });
-        updateStyle();
-        groupIconContainer?.appendChild(button);
-      });
+      }
 
-      CHAT_EMOJIS.forEach((emoji) => {
-        const button = makeElement('button', 'text-xl hover:scale-125 transition p-1', emoji);
-        button.type = 'button';
-        button.addEventListener('click', () => {
-          const input = byId('message-input');
-          input.value += emoji;
-          byId('emoji-picker')?.classList.add('hidden');
-          autoResizeMessageInput();
-          input.focus();
+      function renderQuickTemplates() {
+        const list = byId('quick-templates-list');
+        if (!list) return;
+        list.replaceChildren();
+        list.appendChild(makeEl('p', 'text-xs text-gray-500 dark:text-gray-400 mb-2', 'Escolha um modelo pronto para inserir no campo de mensagem:'));
+        QUICK_TEMPLATES.forEach((tpl) => {
+          const btn = makeEl('button', 'w-full text-left p-3 rounded-xl bg-gray-50 dark:bg-wa-headerDark hover:bg-emerald-50 dark:hover:bg-wa-hoverDark text-xs transition border border-gray-200 dark:border-gray-700 flex items-start gap-2.5');
+          btn.type = 'button';
+          btn.appendChild(makeEl('span', 'text-base shrink-0', tpl.icon));
+          const body = makeEl('div');
+          body.append(
+            makeEl('div', 'font-bold text-gray-800 dark:text-gray-100', tpl.title),
+            makeEl('div', 'text-gray-600 dark:text-gray-300 mt-0.5', tpl.text)
+          );
+          btn.appendChild(body);
+          btn.addEventListener('click', () => {
+            const input = byId('message-input');
+            if (!input) return;
+            input.value = tpl.text;
+            byId('quick-templates-modal')?.classList.add('hidden');
+            autoResizeMessageInput();
+            input.focus();
+          });
+          list.appendChild(btn);
         });
-        chatEmojiPicker?.appendChild(button);
-      });
-
-      if (safeStorageGet(DARK_MODE_STORAGE_KEY) === 'true') {
-        document.documentElement.classList.add('dark');
-      }
-    }
-
-    async function loadProfiles(showErrors = false) {
-      const { data, error } = await supabase
-        .from('zap_profiles')
-        .select('uid,name,grade,avatar_emoji,avatar_color')
-        .order('name');
-
-      if (error) {
-        console.error('Erro ao carregar perfis:', error);
-        if (showErrors) showToast(`Não foi possível carregar os perfis: ${error.message}`, true);
-        return;
       }
 
-      allProfiles = data || [];
-      renderSidebarLists();
-    }
-
-    async function loadGroups(showErrors = false) {
-      const { data, error } = await supabase
-        .from('zap_groups')
-        .select('*')
-        .order('last_message_time', { ascending: false });
-
-      if (error) {
-        console.error('Erro ao carregar grupos:', error);
-        if (showErrors) showToast(`Não foi possível carregar os grupos: ${error.message}`, true);
-        return;
+      function updateSoundButtonUI() {
+        byId('icon-sound-on')?.classList.toggle('hidden', !soundEnabled);
+        byId('icon-sound-off')?.classList.toggle('hidden', soundEnabled);
       }
 
-      groupsList = data || [];
-      renderSidebarLists();
-    }
+      function initUI() {
+        try {
+          const saved = JSON.parse(safeStorageGet(PROFILE_STORAGE_KEY) || '{}');
+          if (saved.name && byId('input-name')) byId('input-name').value = saved.name;
+          if (saved.grade && byId('input-grade')) byId('input-grade').value = saved.grade;
+          if (saved.avatar_emoji && EMOJIS.includes(saved.avatar_emoji)) selectedEmoji = saved.avatar_emoji;
+          if (saved.avatar_color && COLORS.includes(saved.avatar_color)) selectedColor = saved.avatar_color;
+        } catch {
+          safeStorageRemove(PROFILE_STORAGE_KEY);
+        }
 
-    async function loadRecentDmPreviews() {
-      if (!currentUser?.uid) return;
-      const { data, error } = await supabase
-        .from('zap_messages')
-        .select('sender_id,recipient_id,text,created_at')
-        .or(`sender_id.eq.${currentUser.uid},recipient_id.eq.${currentUser.uid}`)
-        .not('recipient_id', 'is', null)
-        .order('created_at', { ascending: false })
-        .limit(100);
+        if (safeStorageGet(DARK_MODE_STORAGE_KEY) === 'true') {
+          document.documentElement.classList.add('dark');
+        }
+        if (safeStorageGet(SOUND_STORAGE_KEY) === 'false') {
+          soundEnabled = false;
+        }
+        updateSoundButtonUI();
 
-      if (error) {
-        console.warn('Não foi possível carregar prévias de DMs:', error);
-        return;
+        renderOptionButtons(byId('avatar-emoji-list'), EMOJIS, () => selectedEmoji, (val) => { selectedEmoji = val; }, false);
+        renderOptionButtons(byId('avatar-color-list'), COLORS, () => selectedColor, (val) => { selectedColor = val; }, true);
+        renderOptionButtons(byId('group-icon-options'), GROUP_ICONS, () => selectedGroupIcon, (val) => { selectedGroupIcon = val; }, false);
+        renderEmojiPicker();
+        renderQuickTemplates();
       }
 
-      (data || []).forEach((msg) => {
-        const peerId = msg.sender_id === currentUser.uid ? msg.recipient_id : msg.sender_id;
-        if (!peerId || dmMetaByPeerId.has(peerId)) return;
-        const prefix = msg.sender_id === currentUser.uid ? 'Você: ' : '';
+      // -------------------------------------------------------------------
+      // 6. Carregamento de Dados e Assinaturas Realtime
+      // -------------------------------------------------------------------
+      async function loadProfiles(showErrors = false) {
+        const { data, error } = await sb
+          .from('zap_profiles')
+          .select('uid,name,grade,avatar_emoji,avatar_color')
+          .order('name');
+        if (error) {
+          console.error('Erro ao carregar perfis:', error);
+          if (showErrors) showToast(`Erro ao carregar perfis: ${error.message}`, true);
+          return;
+        }
+        allProfiles = data || [];
+        renderSidebarLists();
+      }
+
+      async function loadGroups(showErrors = false) {
+        const { data, error } = await sb
+          .from('zap_groups')
+          .select('*')
+          .order('last_message_time', { ascending: false });
+        if (error) {
+          console.error('Erro ao carregar grupos:', error);
+          if (showErrors) showToast(`Erro ao carregar grupos: ${error.message}`, true);
+          return;
+        }
+        groupsList = data || [];
+        renderSidebarLists();
+      }
+
+      async function loadRecentDmPreviews() {
+        if (!currentUser?.uid) return;
+        const { data, error } = await sb
+          .from('zap_messages')
+          .select('sender_id,recipient_id,text,created_at')
+          .or(`sender_id.eq.${currentUser.uid},recipient_id.eq.${currentUser.uid}`)
+          .not('recipient_id', 'is', null)
+          .order('created_at', { ascending: false })
+          .limit(120);
+        if (error) return;
+
+        (data || []).forEach((msg) => {
+          const peerId = msg.sender_id === currentUser.uid ? msg.recipient_id : msg.sender_id;
+          if (!peerId || dmMetaByPeerId.has(peerId)) return;
+          const prefix = msg.sender_id === currentUser.uid ? 'Você: ' : '';
+          dmMetaByPeerId.set(peerId, {
+            lastMessage: `${prefix}${msg.text || ''}`,
+            lastTime: msg.created_at,
+            unreadCount: 0,
+          });
+        });
+        renderSidebarLists();
+      }
+
+      function patchProfile(payload) {
+        if (payload.eventType === 'DELETE') {
+          const delUid = payload.old?.uid;
+          if (delUid) allProfiles = allProfiles.filter((p) => p.uid !== delUid);
+          renderSidebarLists();
+          return;
+        }
+        const row = payload.new;
+        if (!row?.uid) return;
+        const idx = allProfiles.findIndex((p) => p.uid === row.uid);
+        if (idx >= 0) allProfiles[idx] = row;
+        else allProfiles.push(row);
+        allProfiles.sort((a, b) => (a.name || '').localeCompare(b.name || '', 'pt-BR'));
+        renderSidebarLists();
+      }
+
+      function patchGroup(payload) {
+        if (payload.eventType === 'DELETE') {
+          const delId = payload.old?.id;
+          if (delId) groupsList = groupsList.filter((g) => g.id !== delId);
+          renderSidebarLists();
+          return;
+        }
+        const row = payload.new;
+        if (!row?.id) return;
+        const idx = groupsList.findIndex((g) => g.id === row.id);
+        const prev = idx >= 0 ? groupsList[idx] : null;
+        if (idx >= 0) groupsList[idx] = row;
+        else groupsList.push(row);
+
+        if (
+          payload.eventType === 'UPDATE' &&
+          row.id !== currentChat?.id &&
+          prev &&
+          row.last_message_time !== prev.last_message_time
+        ) {
+          groupUnreadById.set(row.id, (groupUnreadById.get(row.id) || 0) + 1);
+          playPopSound();
+        }
+
+        groupsList.sort((a, b) => new Date(b.last_message_time || 0) - new Date(a.last_message_time || 0));
+        renderSidebarLists();
+      }
+
+      function handleIncomingDm(msg) {
+        if (!msg || !currentUser?.uid) return;
+        const isRecipient = msg.recipient_id === currentUser.uid;
+        const isSender = msg.sender_id === currentUser.uid;
+        if (!isRecipient && !isSender) return;
+
+        const peerId = isSender ? msg.recipient_id : msg.sender_id;
+        if (!peerId) return;
+
+        const dmId = getPrivateChatId(currentUser.uid, peerId);
+        const isChatOpen = currentChat?.type === 'dm' && currentChat?.id === dmId;
+        const prev = dmMetaByPeerId.get(peerId) || { unreadCount: 0 };
+        const prefix = isSender ? 'Você: ' : '';
+        const nextUnread = isRecipient && !isChatOpen ? (prev.unreadCount || 0) + 1 : 0;
+
         dmMetaByPeerId.set(peerId, {
           lastMessage: `${prefix}${msg.text || ''}`,
-          lastTime: msg.created_at,
-          unreadCount: 0
+          lastTime: msg.created_at || new Date().toISOString(),
+          unreadCount: nextUnread,
         });
-      });
-      renderSidebarLists();
-    }
 
-    function patchProfile(payload) {
-      if (payload.eventType === 'DELETE') {
-        const deletedUid = payload.old?.uid;
-        if (deletedUid) {
-          allProfiles = allProfiles.filter((p) => p.uid !== deletedUid);
+        if (isRecipient && !isChatOpen) {
+          playPopSound();
+          showToast(`Nova mensagem de ${msg.sender_name || 'colega'} 💬`);
         }
+
         renderSidebarLists();
-        return;
       }
 
-      const row = payload.new;
-      if (!row?.uid) return;
-      const idx = allProfiles.findIndex((p) => p.uid === row.uid);
-      if (idx >= 0) allProfiles[idx] = row;
-      else allProfiles.push(row);
-      allProfiles.sort((a, b) => (a.name || '').localeCompare(b.name || '', 'pt-BR'));
-      renderSidebarLists();
-    }
+      function updateOnlineCount() {
+        const badge = byId('online-count-badge');
+        if (badge) badge.textContent = String(onlineUserIds.size);
+      }
 
-    function patchGroup(payload) {
-      if (payload.eventType === 'DELETE') {
-        const deletedId = payload.old?.id;
-        if (deletedId) {
-          groupsList = groupsList.filter((g) => g.id !== deletedId);
+      function startRealtimeListeners() {
+        loadProfiles(true);
+        loadGroups(true);
+        loadRecentDmPreviews();
+
+        if (profileSubscription) sb.removeChannel(profileSubscription);
+        profileSubscription = sb
+          .channel('zap-laura-profiles')
+          .on('postgres_changes', { event: '*', schema: 'public', table: 'zap_profiles' }, patchProfile)
+          .subscribe();
+
+        if (groupSubscription) sb.removeChannel(groupSubscription);
+        groupSubscription = sb
+          .channel('zap-laura-groups')
+          .on('postgres_changes', { event: '*', schema: 'public', table: 'zap_groups' }, patchGroup)
+          .subscribe();
+
+        if (dmSubscription) sb.removeChannel(dmSubscription);
+        dmSubscription = sb
+          .channel(`zap-laura-dms-${currentUser.uid}`)
+          .on('postgres_changes', {
+            event: 'INSERT',
+            schema: 'public',
+            table: 'zap_messages',
+            filter: `recipient_id=eq.${currentUser.uid}`,
+          }, (payload) => handleIncomingDm(payload.new))
+          .subscribe();
+
+        if (presenceChannel) sb.removeChannel(presenceChannel);
+        presenceChannel = sb.channel('zap-laura-presence', {
+          config: { presence: { key: currentUser.uid } },
+        });
+
+        const syncPresence = () => {
+          if (!presenceChannel) return;
+          const state = presenceChannel.presenceState();
+          onlineUserIds = new Set(Object.keys(state));
+          updateOnlineCount();
+          renderSidebarLists();
+        };
+
+        presenceChannel
+          .on('presence', { event: 'sync' }, syncPresence)
+          .on('presence', { event: 'join' }, syncPresence)
+          .on('presence', { event: 'leave' }, syncPresence)
+          .subscribe(async (status) => {
+            if (status === 'SUBSCRIBED') {
+              setConnectionStatus('online');
+              await presenceChannel.track({
+                uid: currentUser.uid,
+                name: currentUserProfile.name,
+                avatar: currentUserProfile.avatar_emoji,
+              });
+            } else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+              setConnectionStatus('offline');
+            }
+          });
+      }
+
+      // -------------------------------------------------------------------
+      // 7. Renderização da Barra Lateral e Responsividade
+      // -------------------------------------------------------------------
+      function createAvatar(emoji, color, size = 'w-12 h-12') {
+        const av = makeEl('div', `${size} rounded-full flex items-center justify-center text-xl text-white shrink-0 shadow-sm`, emoji || '🎓');
+        av.style.backgroundColor = safeColor(color);
+        return av;
+      }
+
+      function updateGlobalUnreadBadge() {
+        let total = 0;
+        groupUnreadById.forEach((v) => { total += v; });
+        dmMetaByPeerId.forEach((m) => { total += (m.unreadCount || 0); });
+        const badge = byId('chats-unread-badge');
+        if (!badge) return;
+        badge.textContent = String(total);
+        badge.classList.toggle('hidden', total === 0);
+      }
+
+      function renderSidebarLists() {
+        const container = byId('sidebar-list');
+        if (!container) return;
+        const query = (byId('search-input')?.value || '').toLowerCase().trim();
+        byId('btn-clear-search')?.classList.toggle('hidden', !query);
+        container.replaceChildren();
+
+        if (activeSidebarTab === 'chats') {
+          const filteredGroups = groupsList.filter((group) => {
+            const matchesQuery =
+              (group.name || '').toLowerCase().includes(query) ||
+              (group.description || '').toLowerCase().includes(query) ||
+              (group.last_message || '').toLowerCase().includes(query);
+            if (!matchesQuery) return false;
+            if (activeFilter === 'unread') return (groupUnreadById.get(group.id) || 0) > 0;
+            return true;
+          });
+
+          filteredGroups.forEach((group) => {
+            const selected = currentChat?.id === group.id;
+            const unread = groupUnreadById.get(group.id) || 0;
+            const item = makeEl('div', `flex items-center gap-3 px-4 py-3 cursor-pointer transition ${selected ? 'bg-wa-headerLight dark:bg-wa-hoverDark' : 'hover:bg-wa-hoverLight dark:hover:bg-wa-hoverDark/60'}`);
+            item.addEventListener('click', () => selectChat({
+              id: group.id,
+              type: 'group',
+              title: group.name,
+              subtitle: group.description || 'Grupo da Escola Laura de Auricélia',
+              avatar: group.icon || '📚',
+              color: safeColor(group.color),
+            }));
+
+            item.appendChild(createAvatar(group.icon || '📚', group.color));
+            const details = makeEl('div', 'flex-1 min-w-0');
+            const top = makeEl('div', 'flex items-center justify-between gap-2');
+            top.append(
+              makeEl('h4', 'font-semibold text-sm truncate', group.name || 'Grupo'),
+              makeEl('span', `text-[11px] shrink-0 ${unread > 0 ? 'text-wa-teal dark:text-wa-accent font-semibold' : 'text-gray-400'}`, formatTime(group.last_message_time))
+            );
+            const bottom = makeEl('div', 'flex items-center justify-between gap-2 mt-0.5');
+            bottom.appendChild(makeEl('p', `text-xs truncate ${unread > 0 ? 'text-gray-900 dark:text-gray-100 font-semibold' : 'text-gray-500 dark:text-gray-400'}`, group.last_message || group.description || 'Ainda sem mensagens'));
+            if (unread > 0) {
+              bottom.appendChild(makeEl('span', 'px-1.5 py-0.5 rounded-full bg-wa-accent text-white text-[10px] font-bold shrink-0 leading-none', String(unread)));
+            }
+            details.append(top, bottom);
+            item.appendChild(details);
+            container.appendChild(item);
+          });
+
+          const filteredUsers = allProfiles
+            .filter((user) => {
+              if (user.uid === currentUser?.uid) return false;
+              const matchesQuery = (user.name || '').toLowerCase().includes(query) || (user.grade || '').toLowerCase().includes(query);
+              if (!matchesQuery) return false;
+              if (activeFilter === 'online') return isOnline(user.uid);
+              if (activeFilter === 'unread') return (dmMetaByPeerId.get(user.uid)?.unreadCount || 0) > 0;
+              return true;
+            })
+            .sort((a, b) => {
+              const onlineDiff = Number(isOnline(b.uid)) - Number(isOnline(a.uid));
+              const timeA = new Date(dmMetaByPeerId.get(a.uid)?.lastTime || 0).getTime();
+              const timeB = new Date(dmMetaByPeerId.get(b.uid)?.lastTime || 0).getTime();
+              if (timeA !== timeB) return timeB - timeA;
+              if (onlineDiff !== 0) return onlineDiff;
+              return (a.name || '').localeCompare(b.name || '', 'pt-BR');
+            });
+
+          if (filteredUsers.length) {
+            container.appendChild(makeEl('div', 'px-4 py-2 bg-gray-50 dark:bg-wa-headerDark/40 text-[11px] font-bold uppercase tracking-wider text-wa-teal dark:text-wa-accent', 'Conversas diretas'));
+            filteredUsers.forEach((user) => {
+              const dmId = getPrivateChatId(currentUser.uid, user.uid);
+              const selected = currentChat?.type === 'dm' && currentChat?.id === dmId;
+              const meta = dmMetaByPeerId.get(user.uid);
+              const unread = meta?.unreadCount || 0;
+
+              const item = makeEl('div', `flex items-center gap-3 px-4 py-3 cursor-pointer transition ${selected ? 'bg-wa-headerLight dark:bg-wa-hoverDark' : 'hover:bg-wa-hoverLight dark:hover:bg-wa-hoverDark/60'}`);
+              item.addEventListener('click', () => openDirectMessage(user));
+
+              const avatarWrap = makeEl('div', 'relative shrink-0');
+              avatarWrap.appendChild(createAvatar(user.avatar_emoji, user.avatar_color, 'w-11 h-11'));
+              avatarWrap.appendChild(makeEl('span', `absolute bottom-0 right-0 w-3 h-3 ${isOnline(user.uid) ? 'bg-emerald-500' : 'bg-gray-400'} border-2 border-white dark:border-wa-panelDark rounded-full`));
+
+              const details = makeEl('div', 'flex-1 min-w-0');
+              const top = makeEl('div', 'flex items-center justify-between gap-2');
+              const nameWrap = makeEl('div', 'flex items-center gap-1.5 min-w-0');
+              nameWrap.append(
+                makeEl('h4', 'font-semibold text-sm truncate', user.name || 'Usuário'),
+                makeEl('span', 'text-[10px] px-1.5 py-0.5 rounded-full bg-gray-100 dark:bg-wa-headerDark text-gray-600 dark:text-gray-300 font-medium shrink-0', user.grade || 'Aluno')
+              );
+              top.append(
+                nameWrap,
+                makeEl('span', `text-[11px] shrink-0 ${unread > 0 ? 'text-wa-teal dark:text-wa-accent font-semibold' : 'text-gray-400'}`, meta?.lastTime ? formatTime(meta.lastTime) : '')
+              );
+
+              const bottom = makeEl('div', 'flex items-center justify-between gap-2 mt-0.5');
+              const previewText = meta?.lastMessage || (isOnline(user.uid) ? 'Online agora · Toque para conversar' : 'Offline · Toque para conversar');
+              bottom.appendChild(makeEl('p', `text-xs truncate ${unread > 0 ? 'text-gray-900 dark:text-gray-100 font-semibold' : 'text-gray-500 dark:text-gray-400'}`, previewText));
+              if (unread > 0) {
+                bottom.appendChild(makeEl('span', 'px-1.5 py-0.5 rounded-full bg-wa-accent text-white text-[10px] font-bold shrink-0 leading-none', String(unread)));
+              }
+
+              details.append(top, bottom);
+              item.append(avatarWrap, details);
+              container.appendChild(item);
+            });
+          }
+
+          if (!filteredGroups.length && !filteredUsers.length) {
+            container.appendChild(makeEl('div', 'p-8 text-center text-sm text-gray-400', 'Nenhuma conversa encontrada neste filtro.'));
+          }
+        } else {
+          const filteredUsers = allProfiles
+            .filter((user) => {
+              const matchesQuery = (user.name || '').toLowerCase().includes(query) || (user.grade || '').toLowerCase().includes(query);
+              if (!matchesQuery) return false;
+              if (activeFilter === 'online') return isOnline(user.uid);
+              return true;
+            })
+            .sort((a, b) => Number(isOnline(b.uid)) - Number(isOnline(a.uid)));
+
+          if (!filteredUsers.length) {
+            container.appendChild(makeEl('div', 'p-8 text-center text-sm text-gray-400', 'Nenhum participante encontrado.'));
+          } else {
+            filteredUsers.forEach((user) => {
+              const isMe = user.uid === currentUser?.uid;
+              const online = isOnline(user.uid);
+              const item = makeEl('div', 'flex items-center justify-between px-4 py-3 hover:bg-wa-hoverLight dark:hover:bg-wa-hoverDark/60 transition gap-2');
+              const info = makeEl('div', 'flex items-center gap-3 min-w-0');
+              const avatarWrap = makeEl('div', 'relative shrink-0');
+              avatarWrap.appendChild(createAvatar(user.avatar_emoji, user.avatar_color, 'w-11 h-11'));
+              avatarWrap.appendChild(makeEl('span', `absolute bottom-0 right-0 w-3 h-3 ${online ? 'bg-emerald-500' : 'bg-gray-400'} border-2 border-white dark:border-wa-panelDark rounded-full`));
+
+              const details = makeEl('div', 'min-w-0');
+              details.append(
+                makeEl('h4', 'font-semibold text-sm truncate', `${user.name || 'Usuário'}${isMe ? ' (Você)' : ''}`),
+                makeEl('p', 'text-xs text-gray-500 dark:text-gray-400 truncate', `${user.grade || 'Escola'} • ${online ? 'Online agora' : 'Offline'}`)
+              );
+              info.append(avatarWrap, details);
+              item.appendChild(info);
+
+              if (!isMe) {
+                const btn = makeEl('button', 'px-3 py-1.5 rounded-full bg-wa-teal/10 text-wa-teal dark:text-wa-accent text-xs font-semibold hover:bg-wa-teal hover:text-white transition shrink-0', 'Conversar');
+                btn.type = 'button';
+                btn.addEventListener('click', () => openDirectMessage(user));
+                item.appendChild(btn);
+              } else {
+                item.appendChild(makeEl('span', 'text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 font-semibold shrink-0', 'Você'));
+              }
+              container.appendChild(item);
+            });
+          }
         }
-        renderSidebarLists();
-        return;
-      }
 
-      const row = payload.new;
-      if (!row?.id) return;
-      const idx = groupsList.findIndex((g) => g.id === row.id);
-      if (idx >= 0) groupsList[idx] = row;
-      else groupsList.push(row);
-
-      groupsList.sort((a, b) => new Date(b.last_message_time || 0) - new Date(a.last_message_time || 0));
-      renderSidebarLists();
-    }
-
-    function handleIncomingDm(msg) {
-      if (!msg || !currentUser?.uid) return;
-      const isRecipient = msg.recipient_id === currentUser.uid;
-      const isSender = msg.sender_id === currentUser.uid;
-      if (!isRecipient && !isSender) return;
-
-      const peerId = isSender ? msg.recipient_id : msg.sender_id;
-      if (!peerId) return;
-
-      const dmId = getPrivateChatId(currentUser.uid, peerId);
-      const isChatCurrentlyOpen = currentChat?.type === 'dm' && currentChat?.id === dmId;
-      const prev = dmMetaByPeerId.get(peerId) || { unreadCount: 0 };
-      const prefix = isSender ? 'Você: ' : '';
-      const nextUnread = isRecipient && !isChatCurrentlyOpen ? (prev.unreadCount || 0) + 1 : 0;
-
-      dmMetaByPeerId.set(peerId, {
-        lastMessage: `${prefix}${msg.text || ''}`,
-        lastTime: msg.created_at || new Date().toISOString(),
-        unreadCount: nextUnread
-      });
-
-      if (isRecipient && !isChatCurrentlyOpen) {
-        showToast(`Nova mensagem de ${msg.sender_name || 'colega'} 💬`);
-      }
-
-      renderSidebarLists();
-    }
-
-    function updateOnlineCount() {
-      const badge = byId('online-count-badge');
-      if (badge) badge.textContent = String(onlineUserIds.size);
-    }
-
-    function startRealtimeListeners() {
-      loadProfiles(true);
-      loadGroups(true);
-      loadRecentDmPreviews();
-
-      if (profileSubscription) supabase.removeChannel(profileSubscription);
-      profileSubscription = supabase
-        .channel('zap-laura-profiles')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'zap_profiles' }, patchProfile)
-        .subscribe((status) => {
-          if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
-            console.warn('Canal de perfis:', status);
-          }
-        });
-
-      if (groupSubscription) supabase.removeChannel(groupSubscription);
-      groupSubscription = supabase
-        .channel('zap-laura-groups')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'zap_groups' }, patchGroup)
-        .subscribe((status) => {
-          if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
-            console.warn('Canal de grupos:', status);
-          }
-        });
-
-      if (dmSubscription) supabase.removeChannel(dmSubscription);
-      dmSubscription = supabase
-        .channel(`zap-laura-dms-${currentUser.uid}`)
-        .on('postgres_changes', {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'zap_messages',
-          filter: `recipient_id=eq.${currentUser.uid}`
-        }, (payload) => handleIncomingDm(payload.new))
-        .subscribe();
-
-      if (presenceChannel) supabase.removeChannel(presenceChannel);
-      presenceChannel = supabase.channel('zap-laura-presence', {
-        config: { presence: { key: currentUser.uid } }
-      });
-
-      const syncPresence = () => {
-        const state = presenceChannel.presenceState();
-        onlineUserIds = new Set(Object.keys(state));
         updateOnlineCount();
-        renderSidebarLists();
-      };
+        updateGlobalUnreadBadge();
+      }
 
-      presenceChannel
-        .on('presence', { event: 'sync' }, syncPresence)
-        .on('presence', { event: 'join' }, syncPresence)
-        .on('presence', { event: 'leave' }, syncPresence)
-        .subscribe(async (status) => {
-          if (status === 'SUBSCRIBED') {
-            const { error } = await presenceChannel.track({
+      function applyResponsiveLayout() {
+        const isDesktop = window.innerWidth >= 768;
+        const sidebar = byId('sidebar-panel');
+        const chatPanel = byId('chat-panel');
+        const emptyState = byId('empty-chat-state');
+        const activeContainer = byId('active-chat-container');
+        if (!sidebar || !chatPanel) return;
+
+        if (isDesktop) {
+          sidebar.classList.remove('hidden');
+          chatPanel.classList.remove('hidden');
+          chatPanel.classList.add('flex');
+          emptyState?.classList.toggle('hidden', Boolean(currentChat));
+          activeContainer?.classList.toggle('hidden', !currentChat);
+        } else if (currentChat) {
+          sidebar.classList.add('hidden');
+          chatPanel.classList.remove('hidden');
+          chatPanel.classList.add('flex');
+          emptyState?.classList.add('hidden');
+          activeContainer?.classList.remove('hidden');
+        } else {
+          sidebar.classList.remove('hidden');
+          chatPanel.classList.add('hidden');
+          chatPanel.classList.remove('flex');
+        }
+      }
+
+      // -------------------------------------------------------------------
+      // 8. Chat Ativo, Indicador de Digitação (Broadcast) e Mensagens
+      // -------------------------------------------------------------------
+      function clearAllTypingPeers() {
+        typingPeers.forEach((entry) => clearTimeout(entry.timerId));
+        typingPeers.clear();
+        renderTypingIndicator();
+      }
+
+      function registerRemoteTyping(payload) {
+        if (!payload || payload.uid === currentUser?.uid || payload.chatId !== currentChat?.id) return;
+        const existing = typingPeers.get(payload.uid);
+        if (existing) clearTimeout(existing.timerId);
+        const timerId = setTimeout(() => {
+          typingPeers.delete(payload.uid);
+          renderTypingIndicator();
+        }, 2800);
+        typingPeers.set(payload.uid, { name: payload.name || 'Alguém', timerId });
+        renderTypingIndicator();
+      }
+
+      function renderTypingIndicator() {
+        const bar = byId('typing-indicator-bar');
+        const txt = byId('typing-indicator-text');
+        if (!bar || !txt) return;
+        if (!typingPeers.size) {
+          bar.classList.add('hidden');
+          return;
+        }
+        const names = [...typingPeers.values()].map((v) => v.name);
+        txt.textContent = names.length === 1
+          ? `${names[0]} está digitando...`
+          : `${names.slice(0, 2).join(', ')} estão digitando...`;
+        bar.classList.remove('hidden');
+      }
+
+      function broadcastTyping() {
+        if (!messageSubscription || !currentChat || !currentUserProfile) return;
+        const now = Date.now();
+        if (now - lastTypingBroadcastAt < 1600) return;
+        lastTypingBroadcastAt = now;
+        try {
+          messageSubscription.send({
+            type: 'broadcast',
+            event: 'typing',
+            payload: {
               uid: currentUser.uid,
               name: currentUserProfile.name,
-              avatar: currentUserProfile.avatar_emoji
-            });
-            if (error) console.warn('Não foi possível atualizar presença:', error);
-          }
-        });
-    }
-
-    function createAvatar(emoji, color, size = 'w-12 h-12') {
-      const avatar = makeElement('div', `${size} rounded-full flex items-center justify-center text-xl text-white shrink-0 shadow-sm`, emoji || '🎓');
-      avatar.style.backgroundColor = safeColor(color);
-      return avatar;
-    }
-
-    function appendUserRow(container, user, showAction = true) {
-      const isMe = user.uid === currentUser?.uid;
-      const online = isOnline(user.uid);
-      const item = makeElement('div', 'flex items-center justify-between px-4 py-3 hover:bg-wa-hoverLight dark:hover:bg-wa-hoverDark/60 transition');
-      const info = makeElement('div', 'flex items-center gap-3 min-w-0');
-      const avatarWrap = makeElement('div', 'relative shrink-0');
-      avatarWrap.appendChild(createAvatar(user.avatar_emoji, user.avatar_color, 'w-11 h-11'));
-      const statusDot = makeElement('span', `absolute bottom-0 right-0 w-3 h-3 ${online ? 'bg-emerald-500' : 'bg-gray-400'} border-2 border-white dark:border-wa-panelDark rounded-full`);
-      statusDot.title = online ? 'Online agora' : 'Offline';
-      avatarWrap.appendChild(statusDot);
-
-      const details = makeElement('div', 'min-w-0');
-      const name = makeElement('h4', 'font-semibold text-sm truncate', `${user.name || 'Usuário'}${isMe ? ' (Você)' : ''}`);
-      const grade = makeElement('p', 'text-xs text-gray-500 dark:text-gray-400 truncate', user.grade || 'Comunidade escolar');
-      details.append(name, grade);
-      info.append(avatarWrap, details);
-      item.appendChild(info);
-
-      if (showAction && !isMe) {
-        const button = makeElement('button', 'px-3 py-1.5 rounded-full bg-wa-teal/10 text-wa-teal dark:text-wa-accent text-xs font-semibold hover:bg-wa-teal hover:text-white transition', 'Conversar');
-        button.type = 'button';
-        button.addEventListener('click', () => openDirectMessage(user));
-        item.appendChild(button);
-      } else if (!showAction) {
-        const label = makeElement('span', 'text-[10px] px-2 py-0.5 rounded-full bg-gray-100 dark:bg-wa-headerDark text-gray-600 dark:text-gray-300 font-medium', online ? 'Online' : 'Offline');
-        item.appendChild(label);
+              chatId: currentChat.id,
+            },
+          });
+        } catch {}
       }
 
-      container.appendChild(item);
-    }
+      function openDirectMessage(otherUser) {
+        const dmId = getPrivateChatId(currentUser.uid, otherUser.uid);
+        const existing = dmMetaByPeerId.get(otherUser.uid);
+        if (existing?.unreadCount) {
+          dmMetaByPeerId.set(otherUser.uid, { ...existing, unreadCount: 0 });
+        }
+        selectChat({
+          id: dmId,
+          type: 'dm',
+          title: otherUser.name || 'Conversa privada',
+          subtitle: `${otherUser.grade || 'Aluno'} • Escola Laura de Auricélia`,
+          avatar: otherUser.avatar_emoji || '🎓',
+          color: safeColor(otherUser.avatar_color, '#0284c7'),
+          otherUserId: otherUser.uid,
+        });
+      }
 
-    function renderSidebarLists() {
-      const container = byId('sidebar-list');
-      if (!container) return;
-      const query = (byId('search-input')?.value || '').toLowerCase().trim();
-      container.replaceChildren();
+      async function selectChat(chat) {
+        currentChat = chat;
+        const token = ++chatLoadToken;
+        cancelReply();
+        clearAllTypingPeers();
+        currentMessages = [];
+        pendingNewWhileScrolled = 0;
+        updateScrollBottomButton();
 
-      if (activeSidebarTab === 'chats') {
-        const filteredGroups = groupsList.filter((group) =>
-          (group.name || '').toLowerCase().includes(query) ||
-          (group.description || '').toLowerCase().includes(query) ||
-          (group.last_message || '').toLowerCase().includes(query)
-        );
+        if (chat.type === 'dm' && chat.otherUserId && dmMetaByPeerId.has(chat.otherUserId)) {
+          dmMetaByPeerId.set(chat.otherUserId, { ...dmMetaByPeerId.get(chat.otherUserId), unreadCount: 0 });
+        } else if (chat.type === 'group') {
+          groupUnreadById.set(chat.id, 0);
+        }
 
-        filteredGroups.forEach((group) => {
-          const selected = currentChat?.id === group.id;
-          const item = makeElement('div', `flex items-center gap-3 px-4 py-3 cursor-pointer transition ${selected ? 'bg-wa-headerLight dark:bg-wa-hoverDark' : 'hover:bg-wa-hoverLight dark:hover:bg-wa-hoverDark/60'}`);
-          item.addEventListener('click', () => selectChat({
+        applyResponsiveLayout();
+
+        const avatar = byId('active-chat-avatar');
+        avatar.textContent = chat.avatar || '🏫';
+        avatar.style.backgroundColor = safeColor(chat.color);
+        byId('active-chat-title').textContent = chat.title || 'Conversa';
+        byId('active-chat-subtitle').textContent = chat.subtitle || '';
+        renderSidebarLists();
+        renderMessages([], true);
+
+        const prevCh = messageSubscription;
+        messageSubscription = null;
+        if (prevCh) await sb.removeChannel(prevCh);
+        if (token !== chatLoadToken || currentChat?.id !== chat.id) return;
+
+        const channel = sb
+          .channel(`zap-chat-${chat.id}-${token}`)
+          .on('postgres_changes', {
+            event: 'INSERT',
+            schema: 'public',
+            table: 'zap_messages',
+            filter: `chat_id=eq.${chat.id}`,
+          }, (payload) => {
+            if (token !== chatLoadToken || currentChat?.id !== chat.id) return;
+            addMessageOnce(payload.new, true);
+          })
+          .on('broadcast', { event: 'typing' }, ({ payload }) => {
+            if (token !== chatLoadToken || currentChat?.id !== chat.id) return;
+            registerRemoteTyping(payload);
+          });
+
+        messageSubscription = channel;
+        channel.subscribe((status) => {
+          if (token !== chatLoadToken || currentChat?.id !== chat.id) return;
+          if (status === 'SUBSCRIBED') setConnectionStatus('online');
+          if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+            setConnectionStatus('offline');
+            showToast('Conexão instável com o chat. Tentando manter...', true);
+          }
+        });
+
+        if (token !== chatLoadToken || currentChat?.id !== chat.id) {
+          await sb.removeChannel(channel);
+          if (messageSubscription === channel) messageSubscription = null;
+          return;
+        }
+
+        const { data, error } = await sb
+          .from('zap_messages')
+          .select('*')
+          .eq('chat_id', chat.id)
+          .order('created_at', { ascending: false })
+          .limit(120);
+
+        if (token !== chatLoadToken || currentChat?.id !== chat.id) return;
+        if (error) {
+          console.error('Erro ao carregar mensagens:', error);
+          showToast(`Não foi possível carregar mensagens: ${error.message}`, true);
+          return;
+        }
+
+        const merged = new Map();
+        (data || []).reverse().forEach((msg) => merged.set(String(msg.id), msg));
+        currentMessages.forEach((msg) => merged.set(String(msg.id), msg));
+        currentMessages = [...merged.values()].sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+        renderMessages(currentMessages, true);
+      }
+
+      function addMessageOnce(message, fromRealtime = false) {
+        if (!message || currentMessages.some((item) => String(item.id) === String(message.id))) return;
+        const container = byId('messages-container');
+        const wasNearBottom = !container || (container.scrollHeight - container.scrollTop - container.clientHeight < 90);
+
+        currentMessages.push(message);
+        currentMessages.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+
+        if (fromRealtime && message.sender_id !== currentUser?.uid) {
+          playPopSound();
+          if (typingPeers.has(message.sender_id)) {
+            clearTimeout(typingPeers.get(message.sender_id).timerId);
+            typingPeers.delete(message.sender_id);
+            renderTypingIndicator();
+          }
+          if (!wasNearBottom) {
+            pendingNewWhileScrolled += 1;
+            updateScrollBottomButton();
+          }
+        }
+
+        renderMessages(currentMessages, false);
+
+        if (currentChat?.type === 'group') {
+          const group = groupsList.find((item) => item.id === currentChat.id);
+          if (group) {
+            group.last_message = `${message.sender_name || 'Alguém'}: ${message.text || ''}`;
+            group.last_message_time = message.created_at;
+            groupsList.sort((a, b) => new Date(b.last_message_time || 0) - new Date(a.last_message_time || 0));
+            renderSidebarLists();
+          }
+        } else if (currentChat?.type === 'dm' && currentChat?.otherUserId) {
+          const prefix = message.sender_id === currentUser?.uid ? 'Você: ' : '';
+          dmMetaByPeerId.set(currentChat.otherUserId, {
+            lastMessage: `${prefix}${message.text || ''}`,
+            lastTime: message.created_at || new Date().toISOString(),
+            unreadCount: 0,
+          });
+          renderSidebarLists();
+        }
+      }
+
+      function appendFormattedText(container, text) {
+        const value = String(text || '');
+        const urlRegex = /https?:\/\/[^\s]+/gi;
+        let lastIndex = 0;
+        let match;
+        while ((match = urlRegex.exec(value)) !== null) {
+          container.appendChild(document.createTextNode(value.slice(lastIndex, match.index)));
+          const rawUrl = match[0];
+          try {
+            const url = new URL(rawUrl);
+            if (url.protocol === 'http:' || url.protocol === 'https:') {
+              const link = makeEl('a', 'underline text-sky-600 dark:text-sky-400 break-all', rawUrl);
+              link.href = url.href;
+              link.target = '_blank';
+              link.rel = 'noopener noreferrer';
+              container.appendChild(link);
+            } else {
+              container.appendChild(document.createTextNode(rawUrl));
+            }
+          } catch {
+            container.appendChild(document.createTextNode(rawUrl));
+          }
+          lastIndex = match.index + rawUrl.length;
+        }
+        container.appendChild(document.createTextNode(value.slice(lastIndex)));
+      }
+
+      function scrollToMessageById(msgId) {
+        const target = document.querySelector(`[data-msg-id="${CSS.escape(String(msgId))}"]`);
+        if (!target) {
+          showToast('A mensagem respondida está fora do histórico carregado.');
+          return;
+        }
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        target.classList.remove('flash-highlight');
+        void target.offsetWidth;
+        target.classList.add('flash-highlight');
+      }
+
+      function renderMessages(messages, forceScrollBottom = false) {
+        const container = byId('messages-container');
+        if (!container) return;
+
+        const wasNearBottom =
+          forceScrollBottom ||
+          container.scrollHeight - container.scrollTop - container.clientHeight < 90;
+
+        container.replaceChildren();
+
+        if (!messages.length) {
+          const outer = makeEl('div', 'flex justify-center my-8');
+          const note = makeEl('div', 'px-4 py-2.5 rounded-xl bg-amber-100/90 dark:bg-wa-headerDark text-amber-900 dark:text-amber-200 text-xs text-center shadow-sm max-w-sm');
+          note.append('Esta conversa ainda está vazia. ', makeEl('strong', '', 'Envie uma mensagem para começar! 👋'));
+          outer.appendChild(note);
+          container.appendChild(outer);
+          return;
+        }
+
+        let lastDateKey = '';
+        let prevSenderId = '';
+        let prevTimeMs = 0;
+
+        messages.forEach((msg) => {
+          const dateKey = getDateGroupKey(msg.created_at);
+          if (dateKey !== lastDateKey) {
+            lastDateKey = dateKey;
+            prevSenderId = '';
+            const dayRow = makeEl('div', 'flex justify-center my-3');
+            dayRow.appendChild(makeEl('span', 'px-3 py-1 rounded-lg bg-white/85 dark:bg-wa-headerDark/95 text-[11px] font-medium text-gray-600 dark:text-gray-300 shadow-sm', formatDateDivider(msg.created_at)));
+            container.appendChild(dayRow);
+          }
+
+          const mine = msg.sender_id === currentUser?.uid;
+          const msgTimeMs = new Date(msg.created_at).getTime() || 0;
+          const isContinuation = msg.sender_id === prevSenderId && (msgTimeMs - prevTimeMs) < 180000;
+          prevSenderId = msg.sender_id;
+          prevTimeMs = msgTimeMs;
+
+          const wrapper = makeEl('div', `flex flex-col ${mine ? 'items-end' : 'items-start'} ${isContinuation ? 'mt-0.5' : 'mt-2'} animate-pop`);
+          const bubbleClass = mine
+            ? `bg-wa-lightGreen dark:bg-wa-darkGreen text-gray-900 dark:text-gray-100 ${isContinuation ? 'rounded-2xl' : 'rounded-2xl rounded-tr-none bubble-out has-tail'}`
+            : `bg-white dark:bg-wa-bubbleInDark text-gray-900 dark:text-gray-100 ${isContinuation ? 'rounded-2xl' : 'rounded-2xl rounded-tl-none bubble-in has-tail'}`;
+
+          const bubble = makeEl('div', `group relative max-w-[86%] sm:max-w-[68%] px-3.5 py-2 shadow-sm text-sm break-words ${bubbleClass}`);
+          bubble.dataset.msgId = String(msg.id);
+
+          if (!mine && !isContinuation) {
+            const senderHeader = makeEl('div', 'flex items-center gap-1.5 mb-0.5');
+            const sender = makeEl('span', 'text-xs font-bold', msg.sender_name || 'Aluno');
+            sender.style.color = safeColor(msg.sender_color);
+            senderHeader.append(sender, makeEl('span', 'text-[10px] px-1.5 py-0.5 rounded bg-gray-100 dark:bg-black/30 text-gray-500 dark:text-gray-400', msg.sender_grade || ''));
+            bubble.appendChild(senderHeader);
+          }
+
+          if (msg.reply_to && typeof msg.reply_to === 'object') {
+            const reply = makeEl('button', 'w-full text-left mb-1.5 p-2 rounded-lg bg-black/5 dark:bg-black/25 border-l-4 border-wa-teal text-xs hover:bg-black/10 dark:hover:bg-black/40 transition');
+            reply.type = 'button';
+            reply.append(
+              makeEl('p', 'font-bold text-wa-teal dark:text-wa-accent truncate', msg.reply_to.senderName || 'Mensagem'),
+              makeEl('p', 'text-gray-600 dark:text-gray-300 truncate', msg.reply_to.text || '')
+            );
+            if (msg.reply_to.id) {
+              reply.addEventListener('click', () => scrollToMessageById(msg.reply_to.id));
+            }
+            bubble.appendChild(reply);
+          }
+
+          const textBlock = makeEl('div', 'leading-relaxed whitespace-pre-wrap');
+          appendFormattedText(textBlock, msg.text || '');
+          bubble.appendChild(textBlock);
+
+          const footer = makeEl('div', 'flex items-center justify-end gap-2 mt-1 -mb-0.5');
+
+          const copyBtn = makeEl('button', 'text-[10px] text-gray-500 hover:text-wa-teal opacity-80 sm:opacity-0 sm:group-hover:opacity-100 transition', 'Copiar');
+          copyBtn.type = 'button';
+          copyBtn.addEventListener('click', async () => {
+            try {
+              const ok = await copyTextSafe(msg.text || '');
+              showToast(ok ? 'Mensagem copiada!' : 'Não foi possível copiar o texto.', !ok);
+            } catch {
+              showToast('Não foi possível copiar o texto.', true);
+            }
+          });
+
+          const replyBtn = makeEl('button', 'text-[10px] text-gray-500 hover:text-wa-teal transition', 'Responder');
+          replyBtn.type = 'button';
+          replyBtn.addEventListener('click', () => triggerReply({
+            id: msg.id,
+            senderName: msg.sender_name || 'Aluno',
+            text: msg.text || '',
+          }));
+
+          footer.append(copyBtn, replyBtn, makeEl('span', 'text-[10px] text-gray-500 dark:text-gray-400', formatTime(msg.created_at)));
+          if (mine) footer.appendChild(makeEl('span', 'text-sky-500 text-xs font-bold', '✓✓'));
+          bubble.appendChild(footer);
+
+          wrapper.appendChild(bubble);
+          container.appendChild(wrapper);
+        });
+
+        if (wasNearBottom) {
+          container.scrollTop = container.scrollHeight;
+          pendingNewWhileScrolled = 0;
+          updateScrollBottomButton();
+        }
+      }
+
+      function updateScrollBottomButton() {
+        const container = byId('messages-container');
+        const btn = byId('scroll-bottom-btn');
+        const badge = byId('scroll-bottom-badge');
+        if (!container || !btn) return;
+        const distFromBottom = container.scrollHeight - container.scrollTop - container.clientHeight;
+        const show = distFromBottom > 180;
+        btn.classList.toggle('hidden', !show);
+        if (!show) pendingNewWhileScrolled = 0;
+        if (badge) {
+          badge.textContent = String(pendingNewWhileScrolled);
+          badge.classList.toggle('hidden', pendingNewWhileScrolled <= 0);
+        }
+      }
+
+      function triggerReply(message) {
+        replyToMessage = message;
+        byId('reply-preview-bar')?.classList.remove('hidden');
+        byId('reply-to-name').textContent = message.senderName || 'Mensagem';
+        byId('reply-to-text').textContent = message.text || '';
+        byId('message-input')?.focus();
+      }
+
+      function cancelReply() {
+        replyToMessage = null;
+        byId('reply-preview-bar')?.classList.add('hidden');
+      }
+
+      // -------------------------------------------------------------------
+      // 9. Envio, Criação de Grupos, Login, Restauração e Edição de Perfil
+      // -------------------------------------------------------------------
+      async function sendMessage(event) {
+        event.preventDefault();
+        const input = byId('message-input');
+        const btn = byId('send-btn');
+        const text = (input?.value || '').trim();
+        if (!text || !currentChat || !currentUserProfile) return;
+        if (text.length > MAX_MESSAGE_LENGTH) {
+          showToast(`A mensagem pode ter no máximo ${MAX_MESSAGE_LENGTH} caracteres.`, true);
+          return;
+        }
+
+        const chatAtSend = currentChat;
+        const reply = replyToMessage ? {
+          id: replyToMessage.id,
+          senderName: replyToMessage.senderName,
+          text: String(replyToMessage.text || '').slice(0, 500),
+        } : null;
+
+        setButtonBusy(btn, true, '...');
+        input.disabled = true;
+        try {
+          const payload = {
+            chat_id: chatAtSend.id,
+            text,
+            sender_id: currentUser.uid,
+            sender_name: currentUserProfile.name,
+            sender_grade: currentUserProfile.grade,
+            sender_avatar: currentUserProfile.avatar_emoji,
+            sender_color: currentUserProfile.avatar_color,
+            recipient_id: chatAtSend.type === 'dm' ? chatAtSend.otherUserId : null,
+            reply_to: reply,
+          };
+
+          const { data, error } = await sb.from('zap_messages').insert(payload).select().single();
+          if (error) throw error;
+          if (currentChat?.id === chatAtSend.id && data) addMessageOnce(data, false);
+          input.value = '';
+          autoResizeMessageInput();
+          cancelReply();
+        } catch (error) {
+          console.error('Erro ao enviar mensagem:', error);
+          showToast(`Mensagem não enviada: ${error.message}`, true);
+          input.value = text;
+          autoResizeMessageInput();
+        } finally {
+          input.disabled = false;
+          setButtonBusy(btn, false);
+          input.focus();
+        }
+      }
+
+      async function createGroup(event) {
+        event.preventDefault();
+        const nameInput = byId('group-name-input');
+        const descInput = byId('group-desc-input');
+        const name = (nameInput?.value || '').trim();
+        const description = (descInput?.value || '').trim();
+        if (!name) return;
+
+        const btn = event.submitter || byId('create-group-form')?.querySelector('button[type="submit"]');
+        setButtonBusy(btn, true, 'Criando...');
+        try {
+          const group = {
+            id: generateGroupId(),
+            name: name.slice(0, 35),
+            description: (description || `Grupo criado por ${currentUserProfile.name}`).slice(0, 120),
+            icon: selectedGroupIcon,
+            color: COLORS[Math.floor(Math.random() * COLORS.length)],
+            created_by: currentUser.uid,
+            last_message: 'Grupo criado! Envie a primeira mensagem.',
+            last_message_time: new Date().toISOString(),
+          };
+
+          const { error } = await sb.from('zap_groups').insert(group);
+          if (error) throw error;
+          byId('create-group-modal')?.classList.add('hidden');
+          nameInput.value = '';
+          descInput.value = '';
+          patchGroup({ eventType: 'INSERT', new: group });
+          showToast('Grupo criado com sucesso! 🎉');
+          selectChat({
             id: group.id,
             type: 'group',
             title: group.name,
-            subtitle: group.description || 'Grupo da Escola Laura de Auricélia',
-            avatar: group.icon || '📚',
-            color: safeColor(group.color)
-          }));
-
-          item.appendChild(createAvatar(group.icon || '📚', group.color));
-          const details = makeElement('div', 'flex-1 min-w-0');
-          const top = makeElement('div', 'flex items-center justify-between gap-2');
-          top.append(
-            makeElement('h4', 'font-semibold text-sm truncate', group.name || 'Grupo'),
-            makeElement('span', 'text-[11px] text-gray-400 shrink-0', formatTime(group.last_message_time))
-          );
-          const preview = makeElement('p', 'text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5', group.last_message || group.description || 'Ainda sem mensagens');
-          details.append(top, preview);
-          item.appendChild(details);
-          container.appendChild(item);
-        });
-
-        const filteredUsers = allProfiles
-          .filter((user) =>
-            user.uid !== currentUser?.uid &&
-            ((user.name || '').toLowerCase().includes(query) || (user.grade || '').toLowerCase().includes(query))
-          )
-          .sort((a, b) => {
-            const timeA = new Date(dmMetaByPeerId.get(a.uid)?.lastTime || 0).getTime();
-            const timeB = new Date(dmMetaByPeerId.get(b.uid)?.lastTime || 0).getTime();
-            if (timeA !== timeB) return timeB - timeA;
-            return (a.name || '').localeCompare(b.name || '', 'pt-BR');
+            subtitle: group.description,
+            avatar: group.icon,
+            color: group.color,
           });
+        } catch (error) {
+          console.error('Erro ao criar grupo:', error);
+          showToast(`Não foi possível criar o grupo: ${error.message}`, true);
+        } finally {
+          setButtonBusy(btn, false);
+        }
+      }
 
-        if (filteredUsers.length) {
-          container.appendChild(makeElement('div', 'px-4 py-2 bg-gray-50 dark:bg-wa-headerDark/40 text-[11px] font-bold uppercase tracking-wider text-wa-teal dark:text-wa-accent', 'Conversas diretas'));
-          filteredUsers.forEach((user) => {
-            const dmId = getPrivateChatId(currentUser.uid, user.uid);
-            const selected = currentChat?.type === 'dm' && currentChat?.id === dmId;
-            const meta = dmMetaByPeerId.get(user.uid);
-            const unread = meta?.unreadCount || 0;
+      function updateHeaderProfileUI(profile) {
+        const avatar = byId('my-avatar');
+        if (avatar) {
+          avatar.textContent = profile.avatar_emoji || '🎓';
+          avatar.style.backgroundColor = safeColor(profile.avatar_color);
+        }
+        if (byId('my-name-display')) byId('my-name-display').textContent = profile.name;
+        if (byId('my-grade-display')) byId('my-grade-display').textContent = `${profile.grade} • Laura de Auricélia`;
+      }
 
-            const item = makeElement('div', `flex items-center gap-3 px-4 py-3 cursor-pointer transition ${selected ? 'bg-wa-headerLight dark:bg-wa-hoverDark' : 'hover:bg-wa-hoverLight dark:hover:bg-wa-hoverDark/60'}`);
-            item.addEventListener('click', () => openDirectMessage(user));
+      function enterApp(profile) {
+        currentUserProfile = profile;
+        showLoginError('');
+        byId('session-restore-banner')?.classList.add('hidden');
+        byId('login-screen')?.classList.add('hidden');
+        byId('app-screen')?.classList.remove('hidden');
 
-            const avatarWrap = makeElement('div', 'relative shrink-0');
-            avatarWrap.appendChild(createAvatar(user.avatar_emoji, user.avatar_color, 'w-11 h-11'));
-            avatarWrap.appendChild(makeElement('span', `absolute bottom-0 right-0 w-3 h-3 ${isOnline(user.uid) ? 'bg-emerald-500' : 'bg-gray-400'} border-2 border-white dark:border-wa-panelDark rounded-full`));
+        updateHeaderProfileUI(profile);
+        startRealtimeListeners();
+        applyResponsiveLayout();
 
-            const details = makeElement('div', 'flex-1 min-w-0');
-            const top = makeElement('div', 'flex items-center justify-between gap-2');
-            const nameWrap = makeElement('div', 'flex items-center gap-1.5 min-w-0');
-            nameWrap.append(
-              makeElement('h4', 'font-semibold text-sm truncate', user.name || 'Usuário'),
-              makeElement('span', 'text-[10px] px-1.5 py-0.5 rounded-full bg-gray-100 dark:bg-wa-headerDark text-gray-600 dark:text-gray-300 font-medium shrink-0', user.grade || 'Aluno')
-            );
-            top.append(
-              nameWrap,
-              makeElement('span', `text-[11px] shrink-0 ${unread > 0 ? 'text-wa-teal dark:text-wa-accent font-semibold' : 'text-gray-400'}`, meta?.lastTime ? formatTime(meta.lastTime) : '')
-            );
-
-            const bottom = makeElement('div', 'flex items-center justify-between gap-2 mt-0.5');
-            const previewText = meta?.lastMessage || (isOnline(user.uid) ? 'Online agora · Toque para conversar' : 'Offline · Toque para conversar');
-            bottom.appendChild(makeElement('p', `text-xs truncate ${unread > 0 ? 'text-gray-900 dark:text-gray-100 font-semibold' : 'text-gray-500 dark:text-gray-400'}`, previewText));
-            if (unread > 0) {
-              bottom.appendChild(makeElement('span', 'px-1.5 py-0.5 rounded-full bg-wa-accent text-white text-[10px] font-bold shrink-0', String(unread)));
-            }
-
-            details.append(top, bottom);
-            item.append(avatarWrap, details);
-            container.appendChild(item);
+        if (window.innerWidth >= 768) {
+          selectChat({
+            id: 'mural-geral-laura',
+            type: 'group',
+            title: 'Mural Geral • Laura de Auricélia',
+            subtitle: 'Chat geral da comunidade escolar',
+            avatar: '🏫',
+            color: '#008069',
           });
         }
+      }
 
-        if (!filteredGroups.length && !filteredUsers.length) {
-          container.appendChild(makeElement('div', 'p-8 text-center text-sm text-gray-400', 'Nenhuma conversa encontrada.'));
-        }
-      } else {
-        const filteredUsers = allProfiles.filter((user) =>
-          (user.name || '').toLowerCase().includes(query) || (user.grade || '').toLowerCase().includes(query)
-        );
-        if (!filteredUsers.length) {
-          container.appendChild(makeElement('div', 'p-8 text-center text-sm text-gray-400', 'Nenhum aluno ou professor encontrado.'));
+      async function handleLogin(event) {
+        event.preventDefault();
+        showLoginError('');
+        if (!sb && !initSupabaseClient()) return;
+
+        const name = (byId('input-name')?.value || '').trim();
+        const grade = byId('input-grade')?.value || '3º Ano';
+        if (!name) {
+          showLoginError('Digite seu nome ou apelido para entrar.');
           return;
         }
-        filteredUsers.forEach((user) => appendUserRow(container, user, true));
-      }
-      updateOnlineCount();
-    }
-
-    function applyResponsiveLayout() {
-      const isDesktop = window.innerWidth >= 768;
-      const sidebar = byId('sidebar-panel');
-      const chatPanel = byId('chat-panel');
-      if (!sidebar || !chatPanel) return;
-
-      if (isDesktop) {
-        sidebar.classList.remove('hidden');
-        chatPanel.classList.remove('hidden');
-        chatPanel.classList.add('flex');
-      } else if (currentChat) {
-        sidebar.classList.add('hidden');
-        chatPanel.classList.remove('hidden');
-        chatPanel.classList.add('flex');
-      } else {
-        sidebar.classList.remove('hidden');
-        chatPanel.classList.add('hidden');
-        chatPanel.classList.remove('flex');
-      }
-    }
-
-    function openDirectMessage(otherUser) {
-      const dmId = getPrivateChatId(currentUser.uid, otherUser.uid);
-      const existing = dmMetaByPeerId.get(otherUser.uid);
-      if (existing?.unreadCount) {
-        dmMetaByPeerId.set(otherUser.uid, { ...existing, unreadCount: 0 });
-      }
-      selectChat({
-        id: dmId,
-        type: 'dm',
-        title: otherUser.name || 'Conversa privada',
-        subtitle: `${otherUser.grade || 'Aluno'} • Escola Laura de Auricélia`,
-        avatar: otherUser.avatar_emoji || '🎓',
-        color: safeColor(otherUser.avatar_color, '#0284c7'),
-        otherUserId: otherUser.uid
-      });
-    }
-
-    async function selectChat(chat) {
-      currentChat = chat;
-      const token = ++chatLoadToken;
-      cancelReply();
-      currentMessages = [];
-
-      if (chat.type === 'dm' && chat.otherUserId && dmMetaByPeerId.has(chat.otherUserId)) {
-        dmMetaByPeerId.set(chat.otherUserId, { ...dmMetaByPeerId.get(chat.otherUserId), unreadCount: 0 });
-      }
-
-      applyResponsiveLayout();
-
-      byId('empty-chat-state').classList.add('hidden');
-      byId('active-chat-container').classList.remove('hidden');
-      const avatar = byId('active-chat-avatar');
-      avatar.textContent = chat.avatar || '🏫';
-      avatar.style.backgroundColor = safeColor(chat.color);
-      byId('active-chat-title').textContent = chat.title || 'Conversa';
-      byId('active-chat-subtitle').textContent = chat.subtitle || '';
-      renderSidebarLists();
-      renderMessages([], true);
-
-      const previousChannel = messageSubscription;
-      messageSubscription = null;
-      if (previousChannel) {
-        await supabase.removeChannel(previousChannel);
-      }
-      if (token !== chatLoadToken || currentChat?.id !== chat.id) return;
-
-      const channel = supabase
-        .channel(`zap-chat-${chat.id}-${token}`)
-        .on('postgres_changes', {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'zap_messages',
-          filter: `chat_id=eq.${chat.id}`
-        }, (payload) => {
-          if (token !== chatLoadToken || currentChat?.id !== chat.id) return;
-          addMessageOnce(payload.new);
-        });
-
-      messageSubscription = channel;
-      channel.subscribe((status) => {
-        if (token !== chatLoadToken || currentChat?.id !== chat.id) return;
-        if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
-          showToast('A conexão ao chat caiu. Verifique a internet.', true);
+        if (name.length > 28) {
+          showLoginError('Use um apelido com até 28 caracteres.');
+          return;
         }
-      });
 
-      if (token !== chatLoadToken || currentChat?.id !== chat.id) {
-        await supabase.removeChannel(channel);
-        if (messageSubscription === channel) messageSubscription = null;
-        return;
-      }
+        const submitBtn = byId('login-submit-btn');
+        setButtonBusy(submitBtn, true, 'Conectando...');
+        try {
+          attachAuthListener();
+          const authUser = await ensureAuthSession();
+          currentUser = { uid: authUser.id };
+          const profile = {
+            uid: authUser.id,
+            name,
+            grade,
+            avatar_emoji: selectedEmoji,
+            avatar_color: selectedColor,
+          };
 
-      const { data, error } = await supabase
-        .from('zap_messages')
-        .select('*')
-        .eq('chat_id', chat.id)
-        .order('created_at', { ascending: false })
-        .limit(100);
+          const { error } = await sb.from('zap_profiles').upsert(profile, { onConflict: 'uid' });
+          if (error) throw error;
 
-      if (token !== chatLoadToken || currentChat?.id !== chat.id) return;
-      if (error) {
-        console.error('Erro ao carregar mensagens:', error);
-        showToast(`Não foi possível carregar as mensagens: ${error.message}`, true);
-        return;
-      }
-
-      const merged = new Map();
-      (data || []).reverse().forEach((message) => merged.set(String(message.id), message));
-      currentMessages.forEach((message) => merged.set(String(message.id), message));
-      currentMessages = [...merged.values()].sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
-      renderMessages(currentMessages, true);
-    }
-
-    function addMessageOnce(message) {
-      if (!message || currentMessages.some((item) => String(item.id) === String(message.id))) return;
-      currentMessages.push(message);
-      currentMessages.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
-      renderMessages(currentMessages);
-
-      if (currentChat?.type === 'group') {
-        const group = groupsList.find((item) => item.id === currentChat.id);
-        if (group) {
-          group.last_message = `${message.sender_name || 'Alguém'}: ${message.text || ''}`;
-          group.last_message_time = message.created_at;
-          groupsList.sort((a, b) => new Date(b.last_message_time || 0) - new Date(a.last_message_time || 0));
-          renderSidebarLists();
+          safeStorageSet(PROFILE_STORAGE_KEY, JSON.stringify(profile));
+          enterApp(profile);
+        } catch (error) {
+          console.error('Erro no login:', error);
+          showLoginError(explainSupabaseError(error));
+          showToast('Erro ao entrar. Veja os detalhes no formulário.', true);
+        } finally {
+          setButtonBusy(submitBtn, false);
         }
-      } else if (currentChat?.type === 'dm' && currentChat?.otherUserId) {
-        const prefix = message.sender_id === currentUser?.uid ? 'Você: ' : '';
-        dmMetaByPeerId.set(currentChat.otherUserId, {
-          lastMessage: `${prefix}${message.text || ''}`,
-          lastTime: message.created_at || new Date().toISOString(),
-          unreadCount: 0
+      }
+
+      async function handleEditProfile(event) {
+        event.preventDefault();
+        if (!currentUser?.uid) return;
+        const name = (byId('edit-input-name')?.value || '').trim();
+        const grade = byId('edit-input-grade')?.value || '3º Ano';
+        if (!name) return;
+
+        const btn = event.submitter || byId('edit-profile-form')?.querySelector('button[type="submit"]');
+        setButtonBusy(btn, true, 'Salvando...');
+        try {
+          const updated = {
+            uid: currentUser.uid,
+            name: name.slice(0, 28),
+            grade,
+            avatar_emoji: editSelectedEmoji,
+            avatar_color: editSelectedColor,
+          };
+          const { error } = await sb.from('zap_profiles').upsert(updated, { onConflict: 'uid' });
+          if (error) throw error;
+
+          currentUserProfile = updated;
+          safeStorageSet(PROFILE_STORAGE_KEY, JSON.stringify(updated));
+          updateHeaderProfileUI(updated);
+          patchProfile({ eventType: 'UPDATE', new: updated });
+          if (presenceChannel) {
+            await presenceChannel.track({
+              uid: currentUser.uid,
+              name: updated.name,
+              avatar: updated.avatar_emoji,
+            });
+          }
+          byId('edit-profile-modal')?.classList.add('hidden');
+          showToast('Perfil atualizado! ✨');
+        } catch (error) {
+          console.error('Erro ao atualizar perfil:', error);
+          showToast(`Erro ao atualizar perfil: ${error.message}`, true);
+        } finally {
+          setButtonBusy(btn, false);
+        }
+      }
+
+      async function tryAutoRestoreSession() {
+        if (!sb) return;
+        try {
+          const { data: sessionData } = await sb.auth.getSession();
+          const user = sessionData?.session?.user;
+          if (!user) return;
+
+          byId('session-restore-banner')?.classList.remove('hidden');
+          syncRealtimeAuth(sessionData.session);
+          attachAuthListener();
+
+          let profile = null;
+          const { data: remoteProfile } = await sb
+            .from('zap_profiles')
+            .select('uid,name,grade,avatar_emoji,avatar_color')
+            .eq('uid', user.id)
+            .maybeSingle();
+
+          if (remoteProfile?.name) {
+            profile = remoteProfile;
+          } else {
+            const cached = JSON.parse(safeStorageGet(PROFILE_STORAGE_KEY) || 'null');
+            if (cached?.uid === user.id && cached?.name) {
+              profile = cached;
+            }
+          }
+
+          if (profile) {
+            currentUser = { uid: user.id };
+            safeStorageSet(PROFILE_STORAGE_KEY, JSON.stringify(profile));
+            enterApp(profile);
+          } else {
+            byId('session-restore-banner')?.classList.add('hidden');
+          }
+        } catch (err) {
+          console.warn('Sem sessão ativa para restaurar:', err);
+          byId('session-restore-banner')?.classList.add('hidden');
+        }
+      }
+
+      // -------------------------------------------------------------------
+      // 10. Ações e Listeners da Interface
+      // -------------------------------------------------------------------
+      function switchTab(tab) {
+        activeSidebarTab = tab;
+        const chatsBtn = byId('tab-chats');
+        const usersBtn = byId('tab-users');
+        const isChats = tab === 'chats';
+
+        chatsBtn?.classList.toggle('text-wa-teal', isChats);
+        chatsBtn?.classList.toggle('dark:text-wa-accent', isChats);
+        chatsBtn?.classList.toggle('border-wa-teal', isChats);
+        chatsBtn?.classList.toggle('dark:border-wa-accent', isChats);
+        chatsBtn?.classList.toggle('border-transparent', !isChats);
+        chatsBtn?.classList.toggle('text-gray-500', !isChats);
+
+        usersBtn?.classList.toggle('text-wa-teal', !isChats);
+        usersBtn?.classList.toggle('dark:text-wa-accent', !isChats);
+        usersBtn?.classList.toggle('border-wa-teal', !isChats);
+        usersBtn?.classList.toggle('dark:border-wa-accent', !isChats);
+        usersBtn?.classList.toggle('border-transparent', isChats);
+        usersBtn?.classList.toggle('text-gray-500', isChats);
+
+        renderSidebarLists();
+      }
+
+      function setFilter(filterName) {
+        activeFilter = filterName;
+        ['all', 'online', 'unread'].forEach((name) => {
+          const btn = byId(`filter-${name}`);
+          if (!btn) return;
+          const active = name === filterName;
+          btn.className = active
+            ? 'px-2.5 py-1 rounded-full bg-wa-teal/15 text-wa-teal dark:text-wa-accent transition'
+            : 'px-2.5 py-1 rounded-full bg-gray-100 dark:bg-wa-headerDark text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-wa-hoverDark transition';
         });
         renderSidebarLists();
       }
-    }
 
-    function appendFormattedText(container, text) {
-      const value = String(text || '');
-      const urlRegex = /https?:\/\/[^\s]+/gi;
-      let lastIndex = 0;
-      let match;
-      while ((match = urlRegex.exec(value)) !== null) {
-        container.appendChild(document.createTextNode(value.slice(lastIndex, match.index)));
-        const rawUrl = match[0];
+      async function shareAppLink() {
+        const url = window.location.href;
         try {
-          const url = new URL(rawUrl);
-          if (url.protocol === 'http:' || url.protocol === 'https:') {
-            const link = makeElement('a', 'underline text-sky-600 dark:text-sky-400 break-all', rawUrl);
-            link.href = url.href;
-            link.target = '_blank';
-            link.rel = 'noopener noreferrer';
-            container.appendChild(link);
+          if (navigator.share) {
+            await navigator.share({ title: 'Zap da Laura', text: 'Entre no Zap da Laura!', url });
           } else {
-            container.appendChild(document.createTextNode(rawUrl));
+            const ok = await copyTextSafe(url);
+            showToast(ok ? 'Link copiado! Compartilhe com a turma. 🚀' : 'Copie o link pela barra de endereço.', !ok);
           }
-        } catch {
-          container.appendChild(document.createTextNode(rawUrl));
+        } catch (err) {
+          if (err?.name !== 'AbortError') showToast('Não foi possível compartilhar o link.', true);
         }
-        lastIndex = match.index + rawUrl.length;
-      }
-      container.appendChild(document.createTextNode(value.slice(lastIndex)));
-    }
-
-    function renderMessages(messages, forceScrollBottom = false) {
-      const container = byId('messages-container');
-      if (!container) return;
-
-      const wasNearBottom =
-        forceScrollBottom ||
-        container.scrollHeight - container.scrollTop - container.clientHeight < 80;
-
-      container.replaceChildren();
-
-      if (!messages.length) {
-        const outer = makeElement('div', 'flex justify-center my-6');
-        const note = makeElement('div', 'px-4 py-2 rounded-xl bg-amber-100/90 dark:bg-wa-headerDark text-amber-900 dark:text-amber-200 text-xs text-center shadow-xs max-w-sm');
-        note.append('Esta conversa está vazia. ', makeElement('strong', '', 'Envie uma mensagem para começar! 👋'));
-        outer.appendChild(note);
-        container.appendChild(outer);
-        return;
       }
 
-      messages.forEach((message) => {
-        const mine = message.sender_id === currentUser?.uid;
-        const wrapper = makeElement('div', `flex flex-col ${mine ? 'items-end' : 'items-start'} animate-pop`);
-        const bubble = makeElement('div', `relative max-w-[85%] sm:max-w-[68%] px-3.5 py-2 rounded-2xl shadow-xs text-sm break-words ${mine ? 'bg-wa-lightGreen dark:bg-wa-darkGreen text-gray-900 dark:text-gray-100 rounded-tr-none bubble-out' : 'bg-white dark:bg-wa-bubbleInDark text-gray-900 dark:text-gray-100 rounded-tl-none bubble-in'}`);
+      function openChatInfoModal() {
+        if (!currentChat) return;
+        const avatar = byId('info-avatar');
+        avatar.textContent = currentChat.avatar || '🏫';
+        avatar.style.backgroundColor = safeColor(currentChat.color);
+        byId('info-title').textContent = currentChat.title || 'Conversa';
+        byId('info-subtitle').textContent = currentChat.subtitle || '';
 
-        if (!mine) {
-          const senderHeader = makeElement('div', 'flex items-center gap-1.5 mb-0.5');
-          const sender = makeElement('span', 'text-xs font-bold', message.sender_name || 'Aluno');
-          sender.style.color = safeColor(message.sender_color);
-          senderHeader.append(sender, makeElement('span', 'text-[10px] px-1.5 py-0.2 rounded bg-gray-100 dark:bg-black/30 text-gray-500 dark:text-gray-400', message.sender_grade || ''));
-          bubble.appendChild(senderHeader);
-        }
-
-        if (message.reply_to && typeof message.reply_to === 'object') {
-          const reply = makeElement('div', 'mb-1.5 p-2 rounded-lg bg-black/5 dark:bg-black/25 border-l-4 border-wa-teal text-xs');
-          reply.append(
-            makeElement('p', 'font-bold text-wa-teal dark:text-wa-accent truncate', message.reply_to.senderName || 'Mensagem'),
-            makeElement('p', 'text-gray-600 dark:text-gray-300 truncate', message.reply_to.text || '')
+        const meta = byId('info-meta-details');
+        meta.replaceChildren();
+        if (currentChat.type === 'group') {
+          meta.append(
+            makeEl('div', '', '📌 Tipo: Sala de Grupo'),
+            makeEl('div', '', `🟢 Pessoas online na escola agora: ${onlineUserIds.size}`),
+            makeEl('div', '', `💬 Mensagens carregadas: ${currentMessages.length}`)
           );
-          bubble.appendChild(reply);
-        }
-
-        const textBlock = makeElement('div', 'leading-relaxed whitespace-pre-wrap');
-        appendFormattedText(textBlock, message.text || '');
-        bubble.appendChild(textBlock);
-
-        const footer = makeElement('div', 'flex items-center justify-end gap-1.5 mt-1 -mb-0.5');
-        const replyButton = makeElement('button', 'text-[10px] text-gray-500 hover:text-wa-teal transition mr-1', 'Responder');
-        replyButton.type = 'button';
-        replyButton.addEventListener('click', () => window.triggerReply({
-          id: message.id,
-          senderName: message.sender_name || 'Aluno',
-          text: message.text || ''
-        }));
-        footer.append(replyButton, makeElement('span', 'text-[10px] text-gray-500 dark:text-gray-400', formatTime(message.created_at)));
-        if (mine) footer.appendChild(makeElement('span', 'text-sky-500 text-xs font-bold', '✓✓'));
-        bubble.appendChild(footer);
-        wrapper.appendChild(bubble);
-        container.appendChild(wrapper);
-      });
-
-      if (wasNearBottom) {
-        container.scrollTop = container.scrollHeight;
-      }
-    }
-
-    async function sendMessage(event) {
-      event.preventDefault();
-      const input = byId('message-input');
-      const button = byId('send-btn');
-      const text = input.value.trim();
-      if (!text || !currentChat || !currentUserProfile) return;
-      if (text.length > MAX_MESSAGE_LENGTH) {
-        showToast(`A mensagem pode ter no máximo ${MAX_MESSAGE_LENGTH} caracteres.`, true);
-        return;
-      }
-
-      const chatAtSend = currentChat;
-      const reply = replyToMessage ? {
-        id: replyToMessage.id,
-        senderName: replyToMessage.senderName,
-        text: String(replyToMessage.text || '').slice(0, 500)
-      } : null;
-
-      setButtonBusy(button, true, '...');
-      input.disabled = true;
-      try {
-        const payload = {
-          chat_id: chatAtSend.id,
-          text,
-          sender_id: currentUser.uid,
-          sender_name: currentUserProfile.name,
-          sender_grade: currentUserProfile.grade,
-          sender_avatar: currentUserProfile.avatar_emoji,
-          sender_color: currentUserProfile.avatar_color,
-          recipient_id: chatAtSend.type === 'dm' ? chatAtSend.otherUserId : null,
-          reply_to: reply
-        };
-
-        const { data, error } = await supabase.from('zap_messages').insert(payload).select().single();
-        if (error) throw error;
-        if (currentChat?.id === chatAtSend.id && data) addMessageOnce(data);
-        input.value = '';
-        autoResizeMessageInput();
-        cancelReply();
-      } catch (error) {
-        console.error('Erro ao enviar mensagem:', error);
-        showToast(`Mensagem não enviada: ${error.message}`, true);
-        input.value = text;
-        autoResizeMessageInput();
-      } finally {
-        input.disabled = false;
-        setButtonBusy(button, false);
-        input.focus();
-      }
-    }
-
-    async function createGroup(event) {
-      event.preventDefault();
-      const nameInput = byId('group-name-input');
-      const descInput = byId('group-desc-input');
-      const name = nameInput.value.trim();
-      const description = descInput.value.trim();
-      if (!name) return;
-
-      const button = event.submitter || byId('create-group-form').querySelector('button[type="submit"]');
-      setButtonBusy(button, true, 'Criando...');
-      try {
-        const group = {
-          id: generateGroupId(),
-          name: name.slice(0, 35),
-          description: (description || `Grupo criado por ${currentUserProfile.name}`).slice(0, 120),
-          icon: selectedGroupIcon,
-          color: COLORS[Math.floor(Math.random() * COLORS.length)],
-          created_by: currentUser.uid,
-          last_message: 'Grupo criado! Envie a primeira mensagem.',
-          last_message_time: new Date().toISOString()
-        };
-
-        const { error } = await supabase.from('zap_groups').insert(group);
-        if (error) throw error;
-        closeCreateGroupModal();
-        nameInput.value = '';
-        descInput.value = '';
-        patchGroup({ eventType: 'INSERT', new: group });
-        showToast('Grupo criado com sucesso! 🎉');
-        selectChat({
-          id: group.id, type: 'group', title: group.name,
-          subtitle: group.description, avatar: group.icon, color: group.color
-        });
-      } catch (error) {
-        console.error('Erro ao criar grupo:', error);
-        showToast(`Não foi possível criar o grupo: ${error.message}`, true);
-      } finally {
-        setButtonBusy(button, false);
-      }
-    }
-
-    function enterApp(profile) {
-      currentUserProfile = profile;
-      byId('login-screen').classList.add('hidden');
-      byId('app-screen').classList.remove('hidden');
-
-      const avatar = byId('my-avatar');
-      avatar.textContent = profile.avatar_emoji || '🎓';
-      avatar.style.backgroundColor = safeColor(profile.avatar_color);
-      byId('my-name-display').textContent = profile.name;
-      byId('my-grade-display').textContent = `${profile.grade} • Laura de Auricélia`;
-
-      startRealtimeListeners();
-      applyResponsiveLayout();
-      if (window.innerWidth >= 768) {
-        selectChat({
-          id: 'mural-geral-laura', type: 'group',
-          title: 'Mural Geral • Laura de Auricélia',
-          subtitle: 'Chat geral da comunidade escolar', avatar: '🏫', color: '#008069'
-        });
-      }
-    }
-
-    async function handleLogin(event) {
-      event.preventDefault();
-      const name = byId('input-name').value.trim();
-      const grade = byId('input-grade').value;
-      if (!name) return;
-      if (name.length > 28) {
-        showToast('Use um apelido com até 28 caracteres.', true);
-        return;
-      }
-
-      const submitButton = event.submitter || byId('login-form').querySelector('button[type="submit"]');
-      setButtonBusy(submitButton, true, 'Conectando...');
-      try {
-        attachAuthListener();
-        const authUser = await ensureAuthSession();
-        currentUser = { uid: authUser.id };
-        const profile = {
-          uid: authUser.id,
-          name,
-          grade,
-          avatar_emoji: selectedEmoji,
-          avatar_color: selectedColor
-        };
-
-        const { error } = await supabase.from('zap_profiles').upsert(profile, { onConflict: 'uid' });
-        if (error) throw error;
-        safeStorageSet(PROFILE_STORAGE_KEY, JSON.stringify(profile));
-        enterApp(profile);
-      } catch (error) {
-        console.error('Erro no login:', error);
-        showToast(`Não foi possível entrar: ${error.message}`, true);
-      } finally {
-        setButtonBusy(submitButton, false);
-      }
-    }
-
-    function cancelReply() {
-      replyToMessage = null;
-      byId('reply-preview-bar')?.classList.add('hidden');
-    }
-
-    window.renderSidebarLists = renderSidebarLists;
-    window.cancelReply = cancelReply;
-    window.triggerReply = function (message) {
-      replyToMessage = message;
-      byId('reply-preview-bar').classList.remove('hidden');
-      byId('reply-to-name').textContent = message.senderName || 'Mensagem';
-      byId('reply-to-text').textContent = message.text || '';
-      byId('message-input').focus();
-    };
-
-    window.switchSidebarTab = function (tab) {
-      activeSidebarTab = tab;
-      const chats = byId('tab-chats');
-      const users = byId('tab-users');
-      const isChats = tab === 'chats';
-
-      chats?.classList.toggle('text-wa-teal', isChats);
-      chats?.classList.toggle('dark:text-wa-accent', isChats);
-      chats?.classList.toggle('border-wa-teal', isChats);
-      chats?.classList.toggle('dark:border-wa-accent', isChats);
-      chats?.classList.toggle('border-transparent', !isChats);
-      chats?.classList.toggle('text-gray-500', !isChats);
-
-      users?.classList.toggle('text-wa-teal', !isChats);
-      users?.classList.toggle('dark:text-wa-accent', !isChats);
-      users?.classList.toggle('border-wa-teal', !isChats);
-      users?.classList.toggle('dark:border-wa-accent', !isChats);
-      users?.classList.toggle('border-transparent', isChats);
-      users?.classList.toggle('text-gray-500', isChats);
-
-      renderSidebarLists();
-    };
-
-    window.closeMobileChat = function () {
-      currentChat = null;
-      byId('chat-panel').classList.add('hidden');
-      byId('chat-panel').classList.remove('flex');
-      byId('sidebar-panel').classList.remove('hidden');
-      renderSidebarLists();
-    };
-
-    window.openCreateGroupModal = () => byId('create-group-modal').classList.remove('hidden');
-    window.closeCreateGroupModal = () => byId('create-group-modal').classList.add('hidden');
-    window.toggleQuickTemplates = () => byId('quick-templates-modal').classList.toggle('hidden');
-    window.insertTemplate = function (text) {
-      const input = byId('message-input');
-      input.value = text;
-      window.toggleQuickTemplates();
-      autoResizeMessageInput();
-      input.focus();
-    };
-    window.toggleEmojiPicker = () => byId('emoji-picker').classList.toggle('hidden');
-    window.toggleDarkMode = function () {
-      const enabled = document.documentElement.classList.toggle('dark');
-      safeStorageSet(DARK_MODE_STORAGE_KEY, String(enabled));
-    };
-
-    window.shareAppLink = async function () {
-      const url = window.location.href;
-      try {
-        if (navigator.share) {
-          await navigator.share({ title: 'Zap da Laura', text: 'Acesse o Zap da Laura', url });
-        } else if (navigator.clipboard?.writeText) {
-          await navigator.clipboard.writeText(url);
-          showToast('Link copiado! Compartilhe com a turma. 🚀');
         } else {
-          const input = document.createElement('textarea');
-          input.value = url;
-          input.style.position = 'fixed';
-          input.style.opacity = '0';
-          document.body.appendChild(input);
-          input.select();
-          const copied = document.execCommand('copy');
-          input.remove();
-          showToast(copied ? 'Link copiado! Compartilhe com a turma. 🚀' : 'Não foi possível copiar o link.', !copied);
+          const online = isOnline(currentChat.otherUserId);
+          meta.append(
+            makeEl('div', '', '🔒 Tipo: Conversa Privada (visível só para vocês dois)'),
+            makeEl('div', '', online ? '🟢 Online agora' : '⚪ Offline no momento'),
+            makeEl('div', '', `💬 Mensagens carregadas: ${currentMessages.length}`)
+          );
         }
-      } catch (error) 
-        if (error.name !== 'AbortError') showToast('Não foi possível compartilhar o link.', true);
+        byId('chat-info-modal')?.classList.remove('hidden');
       }
-    };
 
-    byId('login-form')?.addEventListener('submit', handleLogin);
-    byId('message-form')?.addEventListener('submit', sendMessage);
-    byId('create-group-form')?.addEventListener('submit', createGroup);
-    byId('search-input')?.addEventListener('input', renderSidebarLists);
-    byId('message-input')?.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter' && !event.shiftKey) {
-        event.preventDefault();
-        byId('message-form').requestSubmit();
+      function bindEvents() {
+        byId('login-form')?.addEventListener('submit', handleLogin);
+        byId('message-form')?.addEventListener('submit', sendMessage);
+        byId('create-group-form')?.addEventListener('submit', createGroup);
+        byId('edit-profile-form')?.addEventListener('submit', handleEditProfile);
+
+        byId('search-input')?.addEventListener('input', renderSidebarLists);
+        byId('btn-clear-search')?.addEventListener('click', () => {
+          const input = byId('search-input');
+          if (input) input.value = '';
+          renderSidebarLists();
+          input?.focus();
+        });
+
+        byId('tab-chats')?.addEventListener('click', () => switchTab('chats'));
+        byId('tab-users')?.addEventListener('click', () => switchTab('users'));
+        byId('filter-all')?.addEventListener('click', () => setFilter('all'));
+        byId('filter-online')?.addEventListener('click', () => setFilter('online'));
+        byId('filter-unread')?.addEventListener('click', () => setFilter('unread'));
+
+        byId('btn-sound-toggle')?.addEventListener('click', () => {
+          soundEnabled = !soundEnabled;
+          safeStorageSet(SOUND_STORAGE_KEY, String(soundEnabled));
+          updateSoundButtonUI();
+          showToast(soundEnabled ? 'Som de notificações ativado 🔔' : 'Som silenciado 🔕');
+        });
+
+        byId('btn-share-link')?.addEventListener('click', shareAppLink);
+        byId('empty-share-btn')?.addEventListener('click', shareAppLink);
+        byId('info-share-btn')?.addEventListener('click', shareAppLink);
+
+        byId('empty-open-mural-btn')?.addEventListener('click', () => {
+          selectChat({
+            id: 'mural-geral-laura',
+            type: 'group',
+            title: 'Mural Geral • Laura de Auricélia',
+            subtitle: 'Chat geral da comunidade escolar',
+            avatar: '🏫',
+            color: '#008069',
+          });
+        });
+
+        byId('btn-toggle-dark')?.addEventListener('click', () => {
+          const enabled = document.documentElement.classList.toggle('dark');
+          safeStorageSet(DARK_MODE_STORAGE_KEY, String(enabled));
+        });
+
+        byId('btn-open-group-modal')?.addEventListener('click', () => byId('create-group-modal')?.classList.remove('hidden'));
+        byId('btn-close-group-modal')?.addEventListener('click', () => byId('create-group-modal')?.classList.add('hidden'));
+        byId('btn-cancel-group-modal')?.addEventListener('click', () => byId('create-group-modal')?.classList.add('hidden'));
+
+        byId('btn-quick-templates')?.addEventListener('click', () => byId('quick-templates-modal')?.classList.toggle('hidden'));
+        byId('btn-close-templates-modal')?.addEventListener('click', () => byId('quick-templates-modal')?.classList.add('hidden'));
+
+        byId('btn-edit-profile')?.addEventListener('click', () => {
+          if (!currentUserProfile) return;
+          byId('edit-input-name').value = currentUserProfile.name || '';
+          byId('edit-input-grade').value = currentUserProfile.grade || '3º Ano';
+          editSelectedEmoji = EMOJIS.includes(currentUserProfile.avatar_emoji) ? currentUserProfile.avatar_emoji : '🎓';
+          editSelectedColor = COLORS.includes(currentUserProfile.avatar_color) ? currentUserProfile.avatar_color : '#008069';
+          renderOptionButtons(byId('edit-emoji-list'), EMOJIS, () => editSelectedEmoji, (v) => { editSelectedEmoji = v; }, false);
+          renderOptionButtons(byId('edit-color-list'), COLORS, () => editSelectedColor, (v) => { editSelectedColor = v; }, true);
+          byId('edit-profile-modal')?.classList.remove('hidden');
+        });
+        byId('btn-close-profile-modal')?.addEventListener('click', () => byId('edit-profile-modal')?.classList.add('hidden'));
+        byId('btn-cancel-profile-modal')?.addEventListener('click', () => byId('edit-profile-modal')?.classList.add('hidden'));
+
+        byId('btn-chat-info')?.addEventListener('click', openChatInfoModal);
+        byId('btn-close-info-modal')?.addEventListener('click', () => byId('chat-info-modal')?.classList.add('hidden'));
+
+        byId('btn-mobile-back')?.addEventListener('click', () => {
+          currentChat = null;
+          clearAllTypingPeers();
+          applyResponsiveLayout();
+          renderSidebarLists();
+        });
+
+        byId('btn-logout')?.addEventListener('click', async () => {
+          if (!confirm('Deseja sair e trocar de usuário?')) return;
+          try { await sb?.auth.signOut(); } catch {}
+          await resetToLogin('Você saiu do aplicativo.');
+        });
+
+        byId('btn-cancel-reply')?.addEventListener('click', cancelReply);
+        byId('btn-emoji-toggle')?.addEventListener('click', () => byId('emoji-picker')?.classList.toggle('hidden'));
+
+        const msgInput = byId('message-input');
+        msgInput?.addEventListener('input', () => {
+          autoResizeMessageInput();
+          broadcastTyping();
+        });
+        msgInput?.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+            byId('message-form')?.requestSubmit();
+          }
+        });
+
+        byId('messages-container')?.addEventListener('scroll', updateScrollBottomButton);
+        byId('scroll-bottom-btn')?.addEventListener('click', () => {
+          const container = byId('messages-container');
+          if (container) container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+        });
+
+        ['create-group-modal', 'quick-templates-modal', 'edit-profile-modal', 'chat-info-modal'].forEach((modalId) => {
+          cont el = byId(modalId);
+          el?.addEventListener('click', (e) => {
+            if (e.target === el) el.classList.add('hidden');
+          });
+        });
+
+        window.addEventListener('resize', applyResponsiveLayout);
+        window.addEventListener('online', () => {
+          setConnectionStatus('online');
+          showToast('Internet reconectada!');
+        });
+        window.addEventListener('offline', () => {
+          setConnectionStatus('offline');
+          showToast('Você está sem internet.', true);
+        });
+
+        document.addEventListener('visibilitychange', async () => {
+          if (document.visibilityState !== 'visible' || !currentUser || !sb) return;
+          try {
+            const { data } = await sb.auth.getSession();
+            if (data?.session) {
+              syncRealtimeAuth(data.session);
+              if (currentChat) {
+                const active = currentChat;
+                await selectChat(active);
+              }
+            }
+          } catch {}
+        });
       }
-    });
-    byId('message-input')?.addEventListener('input', autoResizeMessageInput);
 
-    window.addEventListener('resize', applyResponsiveLayout);
-    window.addEventListener('online', () => showToast('Internet reconectada!'));
-    window.addEventListener('offline', () => showToast('Você está sem internet.', true));
-
-    attachAuthListener();
-    initLoginUI();
+      // -------------------------------------------------------------------
+      // 11. Inicialização Geral
+      // -------------------------------------------------------------------
+      initUI();
+      bindEvents();
+      if (initSupabaseClient()) {
+        attachAuthListener();
+        tryAutoRestoreSession();
+      }
+    })();
   </script>
 </body>
 </html>
+ 
